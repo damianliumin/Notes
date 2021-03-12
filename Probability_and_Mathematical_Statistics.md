@@ -104,5 +104,16 @@ $$
 P_n(k)=C_n^kp^k(1-p)^{n-k},k=0,1,\cdots,n
 $$
 
+**泊松近似**
+**泊松定理：**设$np_n\rightarrow\lambda$($\lambda$为正常数)，则对任一确定的正整数$k$，有
+$$
+\lim_{n\rightarrow \infty}C_n^kp^k_n(1-p_n)^{n-k}=\frac{\lambda^ke^{-\lambda}}{k!}.
+$$
+当$n$很大，$\lambda$很小时，我们有如下的**泊松近似**公式：
+$$
+C_n^kp^k(1-p)^{n-k}\approx \frac{(np)^ke^{-np}}{k!}
+$$
+对$k=0,1,\cdots$相加后，$\sum_{k=0}^\infty\frac{\lambda^ke^{-\lambda}}{k!}=1$。泊松近似可以用于计算独立重复试验概率的近似值。
 
-**泊松近似：**
+
+
