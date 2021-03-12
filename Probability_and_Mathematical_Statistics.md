@@ -66,3 +66,43 @@ $$
 P(B_j|A)=\frac{P(AB_j)}{P(A)}=\frac{P(B_j)P(A|B_j)}{\sum^n_{i=1}P(B_i)P(A|B_i)}
 $$
 这里$P(B_j)$为先验概率。贝叶斯公式可以在已知事件A发生的条件下计算出条件$B_j$发生的概率。
+
+### 6 独立性
+
+两个事件A, B满足$P(AB)=P(A)P(B)$，则其相互独立。对于多个事件$A_1,A_2,\cdots,A_n$，若满足下面$2^n-n-1$个等式：
+$P(A_iA_j)=P(A_i)P(A_j)~~~(1\leq i < j \leq n)$
+$P(A_iA_jA_k)=P(A_i)P(A_j)P(A_k)~~~(1\leq i < j < k \leq n)$
+$\cdots \cdots~\cdots\cdots$
+$P(A_1A_2\cdots A_n)=P(A_1)P(A_2)\cdots P(A_n)$
+则称事件$A_1,A_2,\cdots,A_n$相互独立.
+(注意事件两两独立$\neq$事件相互独立)
+
+**独立性的性质：**
+
+1. $A,B$相互独立且$P(A)>0, P(B)>0$，则$P(A|B)=P(A),P(B|A)=P(B)$
+2. $A$与$B$，$\overline{A}$与$B$，$A$与$\overline{B}$，$\overline{A}$与$\overline{B}$事件中一对相互独立，则其他也相互独立
+3. $P(A)=0$或$P(A)=1$，则$A$与任意事件独立
+4. **分组独立性：**设事件$A_1,A_2,\cdots,A_n$相互独立，将其任意分为没有公共事件的$k$个组，每个组任意作事件运算得到$k$个新事件，则这$k$个新事件相互独立.
+
+**独立事件至少发生一个概率计算：**
+古典概率下，至少发生一个概率的计算通常很复杂，但是独立性可以简化计算：
+$$
+P(\bigcup_{i=1}^nA_i)=1-P(\overline{A_1\cup A_2\cup \cdots \cup A_n})\\=1-P(\overline{A_1}\overline{A_2}\cdots\overline{A_n})=1-P(\overline{A_1})P(\overline{A_2})\cdots P(\overline{A_n})
+$$
+
+若概率都为p，则$P(\bigcup_{i=1}^nA_i)=1-(1-p)^n$。$n\rightarrow \infty$时，概率趋于1，这就是**小概率事件原理**。
+
+**相互独立事件与互不相容事件的区别**：
+$P(A)>0,P(B)>0$，$A,B$相互独立则不可能互斥，$A,B$互斥则不可能相互独立
+
+### 7 独立重复试验
+
+独立重复试验也称**n重贝努利试验**，其概型为：
+每次试验结果只有两个可能$A,\overline{A}$，且$P(A)=p,0<p<1$。试验重复n次，且n次试验相互独立。
+$n$重贝努利试验事件A发生$k$次的概率为
+$$
+P_n(k)=C_n^kp^k(1-p)^{n-k},k=0,1,\cdots,n
+$$
+
+
+**泊松近似：**
