@@ -99,5 +99,64 @@ $$\frac{\part}{\part\theta_n}J(\theta)\approx\frac{J(\theta_1,\theta_2,\cdots,\t
 
 ## L2 - 优化算法 Optimization Algorithms
 
+### 1 Mini-Batch梯度下降法
+
+**Mini-Batch梯度下降法**每次迭代时不会遍历整个数据集，而是从中选取一个子集，这个子集的大小为mini-batch size。计算$J$也根据选取的mini-batch，因而使用该方法得到的$J$会有噪声，但是总体趋势不会改变。相比于应用整个数据集，Mini-Batch的优化速度快很多。
+
+**Notation：**
+$X^{\{t\}}$: 第$t$个mini-batch的输入
+$Y^{\{t\}}:$ 第$t$个mini-batch的label
+
+mini-batch size为$m$时，即为**Batch梯度下降法**，size为1时，即为**随机梯度下降法**.
+
++ Batch梯度下降法：遍历整个数据集，因而速度很慢，$m<2000$时可使用
++ 随机梯度下降法：噪声问题可通过减小学习率解决，但是每次只处理一个样本就失去了向量化加速，因而速度也较慢
++ Mini-Batch梯度下降法：每次遍历部分数据，计算可向量化，速度最快
+
+**mini-batch size：**这也是很重要的超参数，一般在$2^6\sim2^9$之间，使用时也需要考虑CPU/GPU内存大小
+
+### 2 动量梯度下降法
+
+**指数加权平均 Expotentially weighted average**是一个统计学概念，给定一组数据$\theta_0,\theta_1\cdots$，可通过下式计算：
+$$
+v_t=\beta v_{t-1} + (1-\beta)\theta_t
+$$
+$v_t$大约是包括它的前$\frac{1}{1-\beta}$个数据的平均值。$\beta$的选取会对$v_t$有很大的影响：较大的$\beta$使得均值变化较为平缓，但是对数据变化的适应能力弱；较小的$\beta$使得均值对数据变化的适应力强，但是均值本身噪声较大，易受异常值影响。
+
+尽管计算的是均值的近似，指数加权平均的计算效率很高且内存占用少。
+
+**指数加权平均的偏差修正：**如果使用上面提到的式子，一开始设置$v_0=0$，初始阶段指数加权平均的值偏低。我们可以用$\frac{v_t}{1-\beta^t}$来进行修正，可以发现$t$越大分母越接近1，但在初期偏差修正会起到重要作用。通常机器学习中如果不关注初始阶段的预测结果，可以忽略偏差修正。
+
+**动量梯度下降法：**
+**动量梯度下降法 Gradient Descent with Momentum**基于指数加权平均对一般梯度下降法做了优化。一般的梯度下降法会在梯度图中来回摆动，最终到达近似的最优值。动量梯度下降法对近几次的偏导值做了平均，使得水平方向的摆动减缓，从而更加接近最优解方向。
+
+On iteration t:
+	Compute $dW, db$ on the current mini-batch
+	$v_{dW}=\beta v_{dW}+(1-\beta)dW$
+	$v_{db} = \beta v_{db} + (1-\beta)db$
+	$W := W -\alpha v_{dW}, ~ b := b - \alpha v_{db}$
+
+动量梯度下降法的超参数有$\alpha$和$\beta$，后者常取0.9。该算法中无需偏差修正，迭代多次后就几乎没有偏差了。
+
+### 3 RMSprop算法
+
+**RMSprop**全称是root mean square prop，它采取与动量梯度下降法相似的方法加速。假设有两个参数$dw,db$，优化目标函数的梯度图在$w$方向更加狭长，因而在此方向上更平滑，$S_{dw}$较小，$w$的变化会被加快；$b$方向与之相反，RMSprop抑制了$b$方向的抖动，从而使得整个优化过程更加平滑地接近最优解。
+
+On iteration t:
+	Compute $dw, db$ on the current mini-batch
+	$S_{dw}=\beta_2 S_{dw}+(1-\beta_2)(dw)^2$
+	$S_{db} = \beta_2 S_{db} + (1-\beta_2)(db)^2$
+	$w = w -\alpha \frac{dw}{\sqrt{S_{dw}}+\epsilon} ~ b := b - \alpha \frac{db}{\sqrt{S_{db}}+\epsilon}$
+
+这里超参数$\beta_2$要与动量梯度下降法的$\beta$区分开，$\epsilon$是为了防止$S_{dw}$近似于0，一般取$10^{-8}$即可。
+
+### 4 Adam优化算法
+
+
+
+
+
+
+
 
 
