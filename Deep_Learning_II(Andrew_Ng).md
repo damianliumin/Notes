@@ -106,6 +106,7 @@ $$\frac{\part}{\part\theta_n}J(\theta)\approx\frac{J(\theta_1,\theta_2,\cdots,\t
 **Notation：**
 $X^{\{t\}}$: 第$t$个mini-batch的输入
 $Y^{\{t\}}:$ 第$t$个mini-batch的label
+$epoch$: 遍历全部数据一次，称为一代
 
 mini-batch size为$m$时，即为**Batch梯度下降法**，size为1时，即为**随机梯度下降法**.
 
@@ -151,6 +152,42 @@ On iteration t:
 这里超参数$\beta_2$要与动量梯度下降法的$\beta$区分开，$\epsilon$是为了防止$S_{dw}$近似于0，一般取$10^{-8}$即可。
 
 ### 4 Adam优化算法
+
+**Adam算法**代表Adaptive Moment Esitimation，是动量梯度下降法和RMSprop的结合。这个算法和前两者一样能适应各种网络结构，在长期的实践中久经考验。
+
+$v_{dw}=0, S_{dw}=0, v_{db}=0,S_{db}=0$
+On iteration t:
+	Compute $dw, db$ on the current mini-batch
+    $v_{dw}=\beta_1 v_{dw}+(1-\beta_1)dw,~~v_{db} = \beta v_{db} + (1-\beta)db$
+    $S_{dw}=\beta_2 S_{dw}+(1-\beta_2)(dw)^2,~~S_{db} = \beta_2 S_{db} + (1-\beta_2)(db)^2$
+    $v_{dw}^{corrected}=\frac{v_{dw}}{1-\beta_1^t},~~v_{db}^{corrected}=\frac{v_{db}}{1-\beta_1^t}$             # typically we use bias correction here
+	$S_{dw}^{corrected}=\frac{S_{dw}}{1-\beta^t_2},~~S_{db}^{corrected}=\frac{S_{db}}{1-\beta_2^t}$
+	$w = w -\alpha \frac{v_{dw}^{corrected}}{\sqrt{S_{dw}^{corrected}}+\epsilon} ~ b := b - \alpha \frac{v_{db}^{corrected}}{\sqrt{S_{db}^{corrected}}+\epsilon}$
+
+超参数选取如下：
+
++ $\alpha$: 需要实践挑选
++ $\beta_1:$ 推荐使用0.9
++ $\beta_2$: 推荐使用0.999
++ $\epsilon:$ 对结果影响不大，推荐$10^{-8}$
+
+### 5 学习率衰减
+
+Mini-Batch算法中，一开始用稍大的$\alpha$可以快速靠近最优解，但这会使得在最优解附近徘徊很久。如果$\alpha$能够逐渐衰减，训练过程会得到加快。通常采用如下方法实现学习率衰减：
+
++ $\alpha=\frac{1}{1+decayRate\times epochNum}\alpha_0$
++ $\alpha = 0.95^{epochNum} \alpha_0$ # 指数衰减
++ $\alpha = \frac{1}{\sqrt{epochNum}}\alpha_0$
++ $\alpha = \frac{1}{\sqrt{t}}\alpha_0$ # 迭代次数
++ 离散数值衰减
+
+### 6 局部最优的问题
+
+过去人们经常担心优化算法会被困在一个很差的局部最优解。不过随着深度学习理论的发展，人们发现在高维空间中，优化目标函数落入局部最优的概率极低，因为$J$对每个变量求偏导都为0的绝大多数情况会发生在马鞍面上。在这种平缓地带优化速度会很慢，因而上述加速的优化算法可以发挥出更大的优势。
+
+****
+
+## L3 - 超参数调试 Hyperparameter Tuning
 
 
 
