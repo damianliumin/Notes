@@ -162,7 +162,7 @@ On iteration t:
     $S_{dw}=\beta_2 S_{dw}+(1-\beta_2)(dw)^2,~~S_{db} = \beta_2 S_{db} + (1-\beta_2)(db)^2$
     $v_{dw}^{corrected}=\frac{v_{dw}}{1-\beta_1^t},~~v_{db}^{corrected}=\frac{v_{db}}{1-\beta_1^t}$             # typically we use bias correction here
 	$S_{dw}^{corrected}=\frac{S_{dw}}{1-\beta^t_2},~~S_{db}^{corrected}=\frac{S_{db}}{1-\beta_2^t}$
-	$w = w -\alpha \frac{v_{dw}^{corrected}}{\sqrt{S_{dw}^{corrected}}+\epsilon} ~ b := b - \alpha \frac{v_{db}^{corrected}}{\sqrt{S_{db}^{corrected}}+\epsilon}$
+	$w := w -\alpha \frac{v_{dw}^{corrected}}{\sqrt{S_{dw}^{corrected}}+\epsilon} ~ b := b - \alpha \frac{v_{db}^{corrected}}{\sqrt{S_{db}^{corrected}}+\epsilon}$
 
 超参数选取如下：
 
@@ -189,11 +189,46 @@ Mini-Batch算法中，一开始用稍大的$\alpha$可以快速靠近最优解�
 
 ## L3 - 超参数调试 Hyperparameter Tuning
 
+### 1 调试处理
 
+深度学习中有大量的超参数要调试，通常学习率$\alpha$是最重要的超参数，mini-batch size、隐藏单元数量、动量梯度下降法的$\beta$次之，还有一些参数不那么重要，或是选常用值即可。
 
+由于很多时候很难比较超参数的重要性，深度学习中通常**随机选取**一系列超参数的组合进行训练，而非像传统机器学习那样按照grid的方式选取，然后从中挑选出效果最好的那个模型。
 
+**随机选取方法：**通常选取超参数要在一定范围内，对于部分参数可以在普通数轴上随机选，对于$\alpha$等需要在对数数轴上随机选。例如$\alpha$在0.0001~1之间，可用alpha=10**(-4 * np.random.rand()实现)
 
+### 2 Batch归一化
 
+我们已经通过归一化输入加速了训练，实际上对于隐藏层，我们也可以用**Batch归一化 Batch Norm**使得$z$的均值和方差标准化。对于NN中某一层的$z$，计算出：
+$\mu =\frac{1}{m}\sum_i z^{(i)} $
+$\sigma^2 = \frac{1}{m}\sum_i (z^{(i)} - \mu)^2$
+$z_{norm}^{(i)}=\frac{z^{(i)}-\mu}{\sqrt{\sigma^2+\epsilon}}$
+$\tilde{z}^{(i)}=\gamma z_{norm}^{(i)}+\beta$
+$z_{norm}^{(i)}$是对第$i$个样本零均值化和方差标准化的结果，实践中有时不希望$z$集中在0附近，例如tanh函数在0附近近似线性，因而添加了可训练参数$\gamma,\beta$，计算出$\tilde{z}^{(i)}$。
 
+**Batch Norm与神经网络：**
+对与某层神经网络，添加Batch Norm后工作机制如下：
+$a^{[l-1]}$ --($w^{[l]}, b^{[l]}$)--> $z^{[l]}$ --($\beta^{[l]},\gamma^{[l]}$, BN)--> $\tilde{z}^{[l]}$ ----> $a^{[l]}=g(\tilde{z}^{[l]})$
+在实现上有一个细节需要注意：$z^{[l]}=w^{[l]}a^{[l-1]}+b^{[l]}$中，$b^{[l]}$会被Batch Norm消除掉，因而实践中可以省略这个参数。另外，$\beta^{[l]}$和$\gamma^{[l]}$的维度是$(n^{[l]},1)$。添加Batch Norm后梯度下降法如下：
+for $t=1\cdots$ num of mini-batches
+	Compute forward-prop on $X^{\{t\}}$ (in each layer replace $z^{[l]}$ with $\tilde{z}^{[l]}$)
+	Use backprop to compute $dw^{[l]},d\beta^{[l]},d\gamma^{[l]}$
+	Update parameters $w^{[l]}:=w^{[l]}-\alpha w^{[l]}\cdots$ 
+	\# This also works with other optimization algorithms
 
+**Batch Norm作用：**
+1.Batch Norm和输入归一化一样，将$z$的大小控制在一定范围内从而加速算法。
+2.Batch Norm最大的作用在于增强不同层的独立性。在深层神经网络的训练过程中，前几层参数$w,b$的变化可能会引起后面某层的输入$a^{[l-1]}$较大的变化，这就引发了covariate shift的问题，使得第$l$层不得不重新训练以得到准确的函数。通过Batch Norm的$\beta$和$\gamma$可以将$a^{[l-1]}$的均值和方差确定在一个较稳定的范围内，从而减弱浅层参数的变化对深层的影响。
+3.Batch Norm也有一定的正则化作用。由于每次训练的$\sigma,\mu$都是在mini-batch上得到的，有一定的噪声，这会带来与dropout类似得效果。(测试和使用模型时对单一样本无法得到$\sigma,\mu$，通常在训练时对mini-batch用指数加权平均计算这两个值)
 
+### 3 Softmax回归
+
+多元分类问题中，输出$\hat{y}$应该归一化，即各个输出的和为1。通常用Softmax层作为输出层来实现这一点。Softmax回归在没有隐藏层的情况下，得到的决策边界是线性的，有了隐藏层之后可以得到复杂的决策边界。与Softmax对应的时Hardmax，它会将最大概率值映射到1，其余映射到0，相比之下Softmax的映射会温和很多。
+
+**Softmax层：**首先计算出$z^{[L]}=w^{[L]}a^{[L-1]}+b^{[L]}$，然后用**Softmax激活函数**计算出$a^{[L]}=g(z^{[L]})$，其中$a^{[L]}_i = \frac{e^{z^{[L]}_i}}{\sum_{j=1}^C e^{z^{[L]}_j}}$.
+
+对于单个样本，Softmax的损失函数如下：
+$$
+\mathcal{L}(y,\hat{y})=-\sum_{j=1}^C y_j\log\hat{y}_j
+$$
+当$C=2$时，Softmax实质上会退化为Logistic回归。
