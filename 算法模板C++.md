@@ -450,9 +450,30 @@ int dinic(){
 
 ## Ch2 数论算法
 
-### 1 欧几里得算法
+### 1 大数运算
 
-#### 1-1 欧几里得算法
+#### 1-1 快速幂
+
+```c++
+// compute a ^ b (mod q)
+// if q >= 2^32, use (__int128)
+#define ll long long
+
+ll qpow(ll a, ll b, ll q){
+    ll ret = 1, rec = a;
+    while(b != 0){
+        if(b & 1)
+            ret = ret * rec % q;
+        rec = rec * rec % q;
+        b /= 2;
+    }
+    return ret;
+}
+```
+
+### 2 欧几里得算法
+
+#### 2-1 欧几里得算法
 
 ```c++
 // 尾递归实现
@@ -473,7 +494,7 @@ int Euclid(int a, int b){
 }
 ```
 
-#### 1-2 拓展欧几里得算法
+#### 2-2拓展欧几里得算法
 
 返回最大公因数的同时，得到$ax+by=1$的两个整数$x,y$.
 
@@ -492,7 +513,7 @@ int Extended_Euclid(int a, int b, int &x, int &y){
 }
 ```
 
-### 2 欧拉函数
+### 3 欧拉函数
 
 欧拉函数$\varphi(n)$是$[1,n]$中与$n$互质的元素个数。本算法借助了质数打表的思想，并利用公式$\varphi(n)=n\prod_i(1-\frac{1}{p_i})$，其中$p_i$是$n$所有的质因子。通过本算法可快速计算出欧拉函数的数值表。
 
@@ -510,6 +531,99 @@ void Euler() {
             }
 }
 ```
+
+### 4 大质数判定
+
+#### 4-1 Miller-Rabin算法
+
+复杂度为$O(k\lg n)$，其中$k$为数组A中元素个数。费马素性检测通过费马定理，在$2^{32}$内有很高的正确率。米勒-拉宾素性检验在费马定理的基础上加以拓展，能在更大的范围内保证高正确率，模板中的A可以确保$x$在$2^{64}$内算法的正确性。如果$x$是奇素数，则$a^{d},a^{2d},\cdots,a^{2^rd}$要么全是1，要么中间某数为-1(后面肯定全1)。
+
+```c++
+# define ll long long
+
+bool miller_rabin(ll x){
+    if(x < 3)
+        return x == 2;
+    if(x % 2 == 0)
+        return false;
+    ll A[] = {2, 325, 9375, 28178, 
+              450775, 9780504, 1795265022};
+    ll d = x - 1, r = 0;
+    while(d % 2 == 0) // a^(x-1) = a^(2^r*d) = 1 (mod x)
+        d /= 2, ++r;
+    for(auto a : A) {
+        ll v = qpow(a, d, x);  // compute a^d
+        if (v <= 1 || v == x - 1) // x|a or a^d=-1 continue
+            continue;
+        for(int i = 0; i < r; ++i) {
+            v = (__int128)v * v % x;
+            if(v == x - 1 && i != r - 1){
+                v = 1;
+                break;
+            }
+            if(v == 1)
+                return false;
+        }
+        if(v != 1)
+            return false;
+    }
+    return true;
+}
+```
+
+### 5 模运算方程
+
+#### 5-1 BSGS算法
+
+BSGS(baby step & giant step): 求解$a^x\equiv b\mod p$时，取一个整数$t$将方程转化为$a^{At-B}\equiv b\mod p$，则原方程变为$a^{At}\equiv a^Bb\mod p$。暴力枚举列出全部$a^x$，而BSGS仅列出$a^{At}$和$a^Bp$。取$t=\lceil \sqrt{p} \rceil$，$a^Bb$可能取值为$b,ab,a^2b,\cdots,a^{t-1}b (\mod p)$, $a^{At}$可能取值为$a^{t},a^{2t},a^{3t},\cdots,a^{t^2}$。A从小取，B从大取，可得到最小的$x=At-B$
+
+```c++
+#define ll long long
+ll a, b, p, at; // at is a^t
+map<ll, ll> saveB;  // save (a^Bb, B)
+
+void listB(){
+    ll tmp = b;
+    at = 1;
+    for(int i = 0 ;i < t ;++i){
+        saveb[tmp] = i;
+        tmp = tmp * a % q;
+        at = at * a % q;
+    }
+}
+
+ll bsgs(){
+    listB();
+    ll tmp = at;
+    for(int i = 1 ;i <= t ;++i){
+        auto it = saveB.find(tmp);
+        if(it != saveB.end())
+            return i * t - it->second; // minimal x
+        tmp = tmp * at % q;
+    }
+    return -1;  // no solution
+}
+```
+
+#### 5-2 线性模方程算法
+
+求解$ax\equiv b (\mod n)$.
+
+```c++
+int mod_eq_solve(int a, int b, int n){
+    int x, y, d;
+	d = Extended_Euclid(a, b, x, y);
+	if(b % d == 0){
+		int x0 = (x * (b / d)) % n;  // find first solution
+		for(int i = 0 ;i < d ;++i)
+            cout << (x0 + i * (n / d)) % n;
+        return 0;
+    } else 
+        return -1;  // no solution
+}
+```
+
+
 
 ***
 
@@ -681,5 +795,7 @@ void union_set(node* x, node* y){
 }
 ```
 
-### 
+### 5 串匹配
+
+
 
