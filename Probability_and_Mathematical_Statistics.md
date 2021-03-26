@@ -201,5 +201,52 @@ $$
 $$
 p(x)=\left\{ \begin{matrix} \frac{1}{b-a}, & a \leq x \leq b \\ 0, & otherwise \end{matrix} \right.
 $$
-则称$X$在区间$[a,b]$上服从均匀分布，记为$X\sim U[a,b]$.
+则称$X$在区间$[a,b]$上服从均匀分布，记为$X\sim U[a,b]$。分布函数为：
+$$
+F(x)=\left\{ \begin{matrix} 0, &  x < b \\ \frac{x-a}{b-a}, & a\leq x < b \\ 1, & x\geq b \end{matrix} \right.
+$$
+**4.2 指数分布：**
+若随机变量$X$的概率密度为：
+$$
+p(x)=\left\{ \begin{matrix} \lambda e^{-\lambda x}, &x\geq 0 \\ 0, & x < 0 \end{matrix} \right.
+$$
+则称$X$服从参数为$\lambda~(\lambda>0)$的指数分布，记为$X\sim E(\lambda)$。分布函数为：
+$$
+F(x)=\left\{ \begin{matrix} 1 - e^{-\lambda x}, &x\geq 0 \\ 0, & otherwise \end{matrix} \right.
+$$
+指数分布中$\frac{1}{\lambda}$是$X$取值的平均值。另外，指数分布具有**无记忆性**：$P(X>s+t|X>s)=P(X>t)$
 
+**4.3 正态分布：**
+若随机变量$X$的概率密度为：
+$$
+p(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}},~~-\infty < x < \infty
+$$
+则称$X$服从参数为的$\mu, \sigma^2$的正态分布，记为$X\sim N(\mu,\sigma^2)$。分布函数为：
+$$
+F(x)=\int_{-\infty}^x \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(t-\mu)^2}{2\sigma^2}}\mathrm{d}t
+$$
+正态分布沿$x=\mu$对称，在$x=\mu \pm \sigma$处有拐点。$\mu=0,\sigma=1$时，$X$服从标准正态分布，其密度函数和分布函数记为$\varphi(x),\Phi(x)$。标准正态分布有$\Phi(-x)=1-\Phi(x)$。
+**Th: **若随机变量$X\sim N(\mu, \sigma^2)$，则$Z=\frac{X-\mu}{\sigma}\sim N(0,1)$
+**3$\sigma$法则: **$X$的取值几乎肯定落入$[\mu-3\sigma,\mu+3\sigma]$中
+
+### 5 随机变量函数的分布
+
+**5.1 离散型随机变量的函数**
+对于离散型随机变量$X$的函数$Y=g(X)$，可以求$Y$的分布律：
+$$
+P(Y=y_k)=\sum_{i:y_k=g(x_i)}P(X=x_i)
+$$
+**5.2 连续型随机变量的函数**
+设$X$为连续型随机变量，$Y=g(X)$为连续实函数，则$Y=g(X)$也是连续型随机变量。已知$X$的密度函数$p_X(x)$可以求得$Y$的密度函数$p_Y(y)$：
+
+**方法1 - 分布函数法：**
+$$
+F_Y(y)=P(Y\leq y) = P(g(X)\leq y) = \int_{x:g(x)\leq y}p_X(x)\mathrm{d}x
+$$
+然后计算$p_Y(y)=F_Y'(y)$.
+
+**方法2 - Th: **设随机变量$X$的可能取值范围在$(a,b)$，$X$的概率密度为$p_X(x),~a<x<b~$($a,b$可为负、正无穷)。设函数$y=g(x)$处处可导，且恒有$g'(x)>0$ (或恒有$g'(x)<0$)，则$Y=g(X)$为连续型随机变量，其概率密度为
+$$
+p_Y(y)=\left\{ \begin{matrix} p_X[g^{-1}(y)]\cdot |[g^{-1}(y)]'| & \alpha < y < \beta \\ 0 & otherwise \end{matrix} \right.
+$$
+其中$\alpha=\min(g(a),g(b))$，$\beta=\max(g(a),g(b))$.
