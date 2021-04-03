@@ -547,6 +547,8 @@ MODULAR-EXPONENTIATION(a, b, n)
 	return d
 ```
 
+若$a,b,n$长度为$\beta$，则复杂度为$O(\beta^3)$.
+
 ***
 
 ## 4-6 密码算法 Cryptography
@@ -585,7 +587,7 @@ MODULAR-EXPONENTIATION(a, b, n)
 1. 选取两个大素数$p,q~(p\neq q)$，每个数或许是1024 bit
 2. 计算$n=pq$
 3. 选取一个小的奇数$e$，满足$e$与$\phi(n)=(p-1)(q-1)$互质
-4. 计算$e$在模$\phi(n)$系统下的乘法逆元
+4. 计算$e$在模$\phi(n)$系统下的乘法逆元$d$
 5. RSA公钥为$(e,n)$
 6. RSA私钥为$(d,n)$
 

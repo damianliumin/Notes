@@ -471,20 +471,40 @@ ll qpow(ll a, ll b, ll q){
 }
 ```
 
+#### 1-2 快速乘
+
+```c++
+ll qmult(ll a, ll b, ll q){
+    ll ret = 0, rec = a;
+    while(b != 0){
+        if(b & 1)
+            ret = (ret + rec) % q;
+        rec = (rec << 1) % q;
+        b /= 2;
+    }
+    return ret;
+}
+
+// the following method depends on platform
+inline ll qmult(ll a, ll b, ll q){
+    return (__int128)a * (__int128)b / q;
+}
+```
+
 ### 2 欧几里得算法
 
 #### 2-1 欧几里得算法
 
 ```c++
 // 尾递归实现
-int Euclid(int a, int b){
+int euclid(int a, int b){
     if(b == 0)
         return a;
     else
         return Euclid(b, a % b);
 }
 // 循环实现
-int Euclid(int a, int b){
+int euclid(int a, int b){
     while(b != 0){
         int tmp = a;
         a = b;
@@ -499,17 +519,14 @@ int Euclid(int a, int b){
 返回最大公因数的同时，得到$ax+by=1$的两个整数$x,y$.
 
 ```c++
-int Extended_Euclid(int a, int b, int &x, int &y){
+ll ext_euclid(ll a, ll b, ll &x, ll &y){  // ax + by = 1
     if(b == 0){
-        x = 1;
-        y = 0;
+        x = 1, y = 0;
         return a;
     }
-    int ret = Extended_Euclid(b, a % b, x, y);
-    int tmp = x;
-    x = y;
-    y = tmp - a / b * y;
-    return ret;
+    ll d = Extended_Euclid(b, a % b, y, x);
+    y -= a / b * y;
+    return d;
 }
 ```
 
@@ -571,7 +588,7 @@ bool miller_rabin(ll x){
 }
 ```
 
-### 5 模运算方程
+### 5 模运算系统
 
 #### 5-1 BSGS算法
 
@@ -612,7 +629,7 @@ ll bsgs(){
 ```c++
 int mod_eq_solve(int a, int b, int n){
     int x, y, d;
-	d = Extended_Euclid(a, b, x, y);
+	d = ext_euclid(a, b, x, y);
 	if(b % d == 0){
 		int x0 = (x * (b / d)) % n;  // find first solution
 		for(int i = 0 ;i < d ;++i)
@@ -623,7 +640,82 @@ int mod_eq_solve(int a, int b, int n){
 }
 ```
 
+#### 5-3 乘法逆元
 
+```c++
+ll inverse(ll a, ll b){ // use ax + by = 1
+    ll x, y;
+    ext_euclid(a, b, &x, &y);
+	return x;
+}
+
+ll inverse(ll a, ll q){  // use Fermat Th, q must be a prime!
+    return qpow(a, q-2, q)
+}
+```
+
+#### 5-4 中国剩余定理
+
+输入变量n为$m=m_1\cdots m_n$中$m_i$个数，a[]为$a\mod m_i$，m[]存放$m_i$，$p=m$。
+输出变量$a\leftarrow(a_1,a_2\cdots a_n)$
+
+```c++
+ll crt(int n, ll a[], ll m[], ll p){
+    ll w, x, r = 0;
+    for(int i = 1 ;i <= n ;++i){
+        w = p / m[i];
+        x = inverse(w, m[i]);
+        r = (r + qmult(qmult(a[i], w, p), x, p)) % p;
+    }
+    return (r + p) % p;
+}
+```
+
+### 6 组合数
+
+#### 6-1 组合数计算
+
+组合数的计算可以用杨辉三角/动态规划打表：$C_n^m = C_{n-1}^m+C_{n-1}^{m-1}$
+
+```c++
+ll C[MAXN][MAXN];
+
+void cal_comb(){
+    for(int i = 1 ;i < MAXN ;++i)
+        C[i][0] = C[i][i] = 1;
+    for(int i = 2 ;i < MAXN ;++i)
+        for(int j = 1 ;j < i ;++j)
+            C[i][j] = C[i-1][j-1] + C[i-1][j];
+}
+
+```
+
+如果组合数的结果对一个数$q$取模，且模数比$n,m$大，可用乘法逆元计算：$\binom{n}{m}=\frac{n\cdot (n-1)\cdots(n-m+1)}{1\cdot 2\cdots m}$
+
+```c++
+void choose(ll n, ll m, ll q){
+    ll ret = 1, tmp = 1;
+    m = min(m, n - m);  // accelerate
+    for(int i = 1 ;i <= m ;++i) // divided by (1x2x...x m)
+        tmp = qmult(tmp, i, q);
+    ret = inverse(tmp, q);
+    for(int i = 0 ;i <= (long long)(m - 1) ;++i)
+        ret = qmult(n - i, ret, q);
+    return ret;
+}
+```
+
+#### 6-2 卢卡斯定理
+
+卢卡斯定理：$\binom{n}{m}\mod p = \binom{n\mod p}{m\mod p}\binom{\lfloor n/p \rfloor}{\lfloor m/p \rfloor}\mod p$. 数据很大时可用Lucas。
+
+```c++
+ll lucas(ll n, ll m, ll q){
+    if(m == 0)
+        return 1;
+    return qmult(choose(n%q, m%q, q), lucas(n/q, m/q, q), q);
+}
+```
 
 ***
 
