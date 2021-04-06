@@ -250,3 +250,149 @@ $$
 p_Y(y)=\left\{ \begin{matrix} p_X[g^{-1}(y)]\cdot |[g^{-1}(y)]'| & \alpha < y < \beta \\ 0 & otherwise \end{matrix} \right.
 $$
 其中$\alpha=\min(g(a),g(b))$，$\beta=\max(g(a),g(b))$.
+
+***
+
+## Ch3 二维随机变量及其分布
+
+### 1 二维随机变量及其分布函数
+
+**1.1 联合分布函数**
+设$(X,Y)$是一个二维随机变量，则对于任意实数$(x,y)$:
+$$
+F(x,y)=P\{X\leq x, Y\leq y\}
+$$
+是$(x,y)$的函数，称为二维随机变量$(X,Y)$的**联合分布函数**。
+
+**几何意义：**平面上随机点$(X,Y)$落在以$(x,y)$为右上顶点的无穷矩形中的概率。
+
+**性质：**
+
+1. $F(x,y)$分别对每个变量单调不减
+2. $0\leq F(x,y)\leq 1,\\ F(-\infty, y)=0,F(x,-\infty)=0,F(-\infty,-\infty)=0,F(\infty,\infty)=1$
+3. $F(x,y)$关于每个变量右连续，$F(x,y)=F(x+0,y),F(x,y)=F(x,y+0)$
+4. 对于$x_1<x_2,y_2<y_2$，有$F(x_2,y_2)-F(x_1,y_2)-F(x_2,y_1)+F(x_1,y_1)\geq 0$
+
+任意二维随机变量的分布函数满足上述四条性质。反之，任意满足上述性质的$F(x,y)$是某个二维随机变量$(X,Y)$的分布函数。
+
+**n维随机变量的分布函数​**：$F(x_1,x_2\cdots x_n)=P\{X_1\leq x_1,X_2\leq x_2,\cdots,X_n\leq x_n\}$
+
+**1.2 边缘分布函数**
+$F_X(x)=P(X\leq x,Y<\infty)=F(x,\infty)$为$X$的**边缘分布函数**，其中$F(x,\infty)=\lim_{y\rightarrow \infty}F(x,y)$。同理定义$Y$的边缘分布函数为$F_Y(y)=F(\infty,y)$.
+
+**1.3 随机变量的独立性**
+设$X,Y$为随机变量，若对任意实数$x,y$，随机事件$X\leq x$与$Y\leq y$相互独立，即$P(X\leq x,Y\leq y)=P(X\leq x)P(Y\leq y)$或$F(x,y)=F_X(x)F_Y(y)$对任意$(x,y)$成立，则称随机变量$X,Y$相互独立。
+
+**Th：**设随机变量$X,Y$相互独立，$f(x)$与$g(y)$为连续或分段连续函数，则$f(X)$与$g(Y)$也相互独立.
+
+### 2 二维离散型随机变量
+
+**2.1 联合分布律**
+若二维随机变量$(X,Y)$的取值是有限个或可列无穷多个，则称$(X,Y)$为**二维离散型随机变量**。设$(X,Y)$二维离散型随机变量，$X,Y$的取值为$(x_i,y_j),(i,j=1,2,\cdots,n,\cdots)$，则称$p_{ij}=P(X=x_i,Y=y_j),(i,j=1,2,\cdots)$为$(X,Y)$的**联合分布律**。
+
+**性质：**
+
+1. $p_{ij}=P(X=x_i,Y=y_j)\geq 0$
+2. $\sum_i\sum_j p_{ij}=1$
+
+**2.2 边缘分布律**
+$P\{X=x_i\}=\sum_j P(X=x_i,Y=y_j)=\sum_{j=1}^{+\infty}p_{ij}=p_{i\cdot}$
+$P\{Y=y_j\}=\sum_iP(X=x_i,Y=y_i)=\sum_{i=1}^{+\infty}p_{ij}=p_{\cdot j}$
+
+**2.3 联合分布函数与边缘分布函数**
+联合分布函数为：
+$$
+F(x,y)=\sum_{x_i\leq x}\sum_{y_j\leq y}p_{ij}
+$$
+边缘分布函数为：
+$$
+F_X(x)=P(X\leq x)=\sum_{x_i\leq x}p_{i\cdot}=\sum_{x_i\leq x}\sum_{j=1}^\infty p_{ij}\\
+F_Y(y)=P(Y\leq y)=\sum_{y_j\leq y}p_{\cdot j}=\sum_{y_j\leq y}\sum_{i=1}^\infty p_{ij}
+$$
+**2.4 独立性条件**
+若对一切$X,Y$的可能取值$(x_i,y_j)$有$P(X=x_i,Y=y_j)=P(X=x_i)P(Y=y_j),~(i,j=1,2,\cdots)$，即$p_{i,j}=p_{i\cdot}p_{\cdot j}$，则$X,Y$相互独立。
+
+### 3 二维连续型随机变量
+
+**3.1 二维连续型随机变量**
+对于二维随机变量 $(X,Y)$的分布函数 $F (x , y )$，如果存在非负函数$p (x , y )$，使得对于任意的$ x,y$有：
+$$
+F(x,y)=\int_{-\infty}^x\int_{-\infty}^y p(u,v)dudv
+$$
+则称$(X,Y)$是**二维连续型随机变量**，函数$p(x,y)$称为$(X,Y)$的**联合密度函数**，简称**概率密度**。
+
+**性质：**
+
+1. $p(x,y)\geq 0$
+2. $\int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty}p(x,y)dxdy=F(+\infty,+\infty)=1$
+3. 若$p(x,y)$在点$(x,y)$连续，则有$\frac{\part^2F(x,y)}{\part x\part y}=p(x,y)$
+4. 设$G$是平面上一个区域，点$(X,Y)$落在$G$内的概率为$P\{(X,Y)\in G\}=\int\int_Gp(x,y)dxdy$
+
+**3.2 边缘密度**
+$F_X(x)=F(x,\infty)=\int_{-\infty}^x(\int_{-\infty}^{+\infty}p(u,y)dy)du$，$F_X(x)$为$X$的**边缘分布函数**，称$p_X(x)=F_X'(x)=\int_{-\infty}^{\infty}p(x,y)dy$为$X$的**边缘密度**。边缘分布函数与边缘密度满足：
+$$
+F_X(x)=\int_{-\infty}^xp_X(x)dx
+$$
+$Y$的边缘分布函数与边缘密度同理。
+
+**3.3 独立性条件**
+当$\forall x,y,F(x,y)=F_X(x)F_Y(y)$时，随机变量$X$与$Y$相互独立。用密度函数可表示为$\forall x,y,p(x,y)=p_X(x)p_Y(y)$
+
+**3.4 二维均匀分布**
+设$D$是平面上的有界区域，其面积为$A$，若二维随机变量$(X,Y)$的密度函数为
+$$
+p(x,y)=\left\{\begin{matrix} \frac{1}{A}&(x,y)\in D\\ 0&(x,y)\not\in D\end{matrix} \right.
+$$
+则称二维随机变量$(X,Y)$服从$D$上的**均匀分布**。
+
+**几何意义：**$P((X,Y)\in G)=\frac{S_{G\cap D}}{S_D}$
+
+**3.5 二维正态分布**
+若二维随机变量$(X,Y)$具有概率密度
+$$
+p(x,y)=\frac{1}{2\pi \sigma_1\sigma_2\sqrt{1-\rho^2}}e^{-\frac{1}{2(1-\rho^2)}[(\frac{x-\mu_1}{\sigma_1})^2-2\rho (\frac{x-\mu_1}{\sigma_1})(\frac{y-\mu_2}{\sigma_2})+(\frac{y-\mu_2}{\sigma_2})^2]}
+$$
+其中$\mu_1,\mu_2,\sigma_1>0,\sigma_2>0,|\rho|<1$均为常数，则称$(X,Y)$服从**二维正态分布**，记作$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho)$
+
+**Th：**二维正态分布的边缘分布仍为正态分布：设$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho)$，则$X\sim N(\mu_1,\sigma_1^2),Y\sim N(\mu_2,\sigma_2^2)$。即$p_X(x)=\frac{1}{\sqrt{2\pi}\sigma_1}e^{-\frac{(x-\mu_1)^2}{2\sigma_1^2}},p_Y(y)=\frac{1}{\sqrt{2\pi}\sigma_2}e^{-\frac{(y-\mu_2)^2}{2\sigma_2^2}}$
+
+**Th：**设$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho)$，则$X,Y$相互独立的充要条件为$\rho=0$
+
+### 4 条件分布
+
+**4.1 离散型随机向量的条件概率分布**
+条件概率：
+$$
+P(Y=y_j|X=x_i)=\frac{P(X=x_i,Y=y_j)}{P(X=x_i)}=\frac{p_{ij}}{p_{i\cdot}}
+$$
+在$X=x_i$的条件下，$Y$的条件分布率为
+$$
+Y|_{X=x_i}\sim\begin{pmatrix} y_1&y_2&\cdots &y_j&\cdots\\p_{i1}/p_{i\cdot} & p_{i2}/p_{i\cdot}&\cdots &p_{ij}/p_{i\cdot}&\cdots \end{pmatrix}
+$$
+**全概率公式：**
+$$
+P(Y=y_j)=\sum_{i=1}^{+\infty}P(Y=y_j|X=x_i)P(X=x_i)
+$$
+**4.2 连续型随机向量的条件概率分布**
+由于$P(X=x)=0$，不能用时间的条件概率来简单定义该分布，应从极限方法定义：
+$$
+P(Y\leq y | X= x)= \lim_{\Delta x \rightarrow 0+} P(Y\leq y|x< X \leq x + \Delta x)\\=\lim_{\Delta x\rightarrow 0+}\frac{\int_x^{x+\Delta x}\int _{-\infty}^y p(u,v) du dv }{\int_x^{x+\Delta x}p_X(u)du}
+$$
+若$p(x,y)$和$p_X(x)$均连续，且$p_X(x)>0$，有
+$$
+P(Y\leq y | X = x)=\int_{-\infty}^y\frac{p(x,v)}{p_X(x)}dv
+$$
+称$P(Y\leq y | X=x)$为在条件$X=x$的条件下$Y$的**条件分布函数**，记为$F_{Y|X=x}(y)$。可见条件分布函数可导，称导函数
+$$
+P_{Y|X=x}(y)=F'_{Y|X=x}(y)=\frac{p(x,y)}{p_X(x)}
+$$
+为在$X=x$条件下$Y$的**条件密度函数**。
+
+**密度函数的乘法公式：**
+$$
+p(x,y)=p_{Y|X=x}(y)p_X(x)
+$$
+**全概率公式的密度函数形式：**
+$$
+p_Y(y)= \int_{-\infty}^{+\infty}p(x,y)dx = \int_{-\infty}^{+\infty}p_X(x)P_{Y|X=x}(y)dx
+$$
