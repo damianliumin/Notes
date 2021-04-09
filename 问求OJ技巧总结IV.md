@@ -116,7 +116,33 @@ B题第三步的方法，难度不大。
 
 我用的方法是：对所有数字两两求gcd，计算出得到这个gcd的最小代价，这样就得到了一组新的数字及其代价。递归重复上述步骤直到只剩下一个gcd，其cost即为最小代价。
 
+***
 
+## 4-6 密码学与编码学
+
+### A Project
+
+本次通过C++静态成员函数实现BFS和DFS，掌握了functional和optional的使用方法。
+
+### B Base64
+
+编码转化，用Python很简单，但是我没有妥善处理输入的问题，导致不停RE。整个题目只需要两行：
+
+```python
+import base64, sys
+print(base64.b64encode(sys.stdin.buffer.read()).decode("ascii"))
+```
+
+### C RSA
+
+首先判断给出的RSA公钥、密钥是否正确，然后加密，算法上没什么难度。一开始用Python遇到输入问题，改用C++没有问题了。Python输入处理可以这样：
+
+```python
+try:
+    e, d, p, q, n = map(int, input().split())
+except EOFError:
+    break
+```
 
 
 

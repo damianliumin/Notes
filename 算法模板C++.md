@@ -83,7 +83,7 @@ void bfs(int s){
     father[s] = s;
     dis[s] = 0;
     while(q.size() != 0){
-     	u = q.pop();
+     	int u = q.pop();
         for(auto &v: connect[u])
             if(!vis[v]){
                 vis[v] = 1;
