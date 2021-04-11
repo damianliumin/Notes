@@ -27,7 +27,7 @@ def check_prev_ptr(addr_rec, ptr, cur_idx, cpu):
         if space[0] == ptr:
             addr_rec.remove(space)
             return
-    printf("problem detected in #%d-(%d), ptr %x not found"%(cur_idx, cpu, ptr))
+    print("problem detected in #%d-(%d), ptr %x not found"%(cur_idx, cpu, ptr))
     exit()
 
 
@@ -56,10 +56,11 @@ if __name__ == "__main__":
                     check_new_space(addr_rec, new_space, i, cpu) # check conflicts with prev mem
                     addr_rec.append(new_space) # safe, append to record
                     succ = succ + 1
-            else:  # kfree
+            elif str_ele[1] == 'kfree':  # kfree
                 ptr = int(str_ele[2], 16)
                 cpu = int(str_ele[3])
                 check_prev_ptr(addr_rec, ptr, i, cpu)
+
 
         print("succ %d fail %d"%(succ, fail))
         print("pass test{}".format(testid))

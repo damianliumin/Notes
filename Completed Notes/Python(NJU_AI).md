@@ -4,10 +4,6 @@ Author: Daniel Liu
 Contact me:  191240030@smail.nju.edu.cn
 Course: NJU AI Programming
 
-[TOC]
-
-
-
 ## Chapter 1 - 数据类型
 
 ### 1 基本数据类型
