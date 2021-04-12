@@ -619,5 +619,69 @@ POLLARD-RHO(n)
 
 ***
 
+## 4-7 代数编码 Algebraic Coding Theory
 
+### 1 检错码与纠错码
 
+**1.1 奇偶校验码**
+**偶校验码 even parity**添加一位，用于确保为1的位数为偶数。奇校验码添加一位确保为1的位数为奇数。
+
+**1.2 最大相似度解码**
+**Th：**如果传送$n$位二进制信息$(x_1,\cdots,x_n)$，每位出错的概率为$p$，则恰好$k$位出错的概率为$\binom{n}{k}p^k(1-p)^{n-k}$.
+
+**1.3 Block codes**
+编码函数：$E:\Z_2^m\rightarrow \Z_2^n$
+解码函数：$D: \Z_2^n\rightarrow \Z_2^m$
+
+**汉明距离 Hamming distance：**
+$d(x,y)$表示编码$x,y$不同的位数，最小距离$d_{\min}$为最小的汉明距离。$w(x)$表示$x$的权重，$w(x)=d(x,0)$。
+
+**Proposition:** 令$x,y,z$为$n$位二进制元组
+
+1. $w(x)=d(x,0)$
+2. $d(x,y)\geq 0$
+3. 当$x=y$时$d(x,y)=0$
+4. $d(x,y)=d(y,x)$
+5. $d(x,y)\leq d(x,z)+d(z,y)$
+
+**定理：**令$C$为$d_\min=2n+1$的编码，则$C$可以纠正$n$个错误，检测不多于$2n$个错误。
+
+### 2 线性编码
+
+**群编码 group code**是$\Z^n_2$的一个子群。通常确定一组编码的$d_\min$计算量很大，通过下述定理可以发现群编码解决了这一问题。
+
+**引理：**$x,y$是$n$位二进制元组，则$w(x+y)=d(x,y)$
+**定理：**$d_\min$是群编码$C$的最小距离，则$d_\min = \min\{w(x):x\neq 0\}$
+
+**定义：**矩阵$H\in \mathbb{M}_{m\times n}(\Z_2)$的null space为$n-$元组$x$的集合，其中所有$x$满足$Hx=0$，记为$Null(H)$。称$H$的$Null(H)$得到的编码为线性编码。
+
+**定理：**令$H\in \mathbb{M}_{m\times n}(\Z_2)$，则$Null(H)$是群编码。
+
+### 3 标准生成矩阵
+
+**定义：**首先定义两个特殊矩阵，H为canonical parity-check matrix，G为standard generator matrix（A是一个$m\times (n-m)$矩阵）
+$$
+H = (A|I_m) ~~~~ G = \begin{pmatrix} \frac{I_{n-m}}{A} \end{pmatrix}
+$$
+利用矩阵$G$，可以得到编码函数$E:\Z_2^{n-m}\rightarrow \Z_2^n$
+
+**生成矩阵的定理：**
+
+1. $H\in\mathbb{M}_{m\times n}(\Z_2)$是conanical parity-check matrix，则Null(H)包含所有前$n-m$位任意，后$m$位由$Hx=0$决定的$x\in\Z_2^n$。最后$m$位中的每位对前$n-m$中的某些位形成偶校验(取决于A和待编码信息)
+2. **线性码数学基础：**G是$n\times k$的标准生成矩阵，则$C=\{y:Gx=y~for~x\in\Z_2^k\}$是$(n,k)-$block code。更具体地，$C$是群编码。
+3. **线性码数学基础：**令C为G生成的编码，则$y\in C\iff Hy=0$，C是$H$生成的线性码。
+4. **查错：**H是$m\times n$的二进制矩阵，则Null(H)能查一位错$\iff$H任一列不全为0
+5. **纠错**：H是$m\times n$的二进制矩阵，则Null(H)能纠一位错$\iff$H任一列不全为0且没有两列相同($d_\min \geq 3$)
+
+### 4 解码
+
+**4.1 纠码**
+**定义：**$x$的syndrome为$Hx$。
+
+**纠码的定理：**
+
+1. H是$m\times n$的二进制矩阵且决定了编码，$x$为收到的n-tuple。设$x=c+e$，$c$为传输码，$e$为传输错误，则$Hx=H(c+e)=He$，即$x$和$e$的syndrome相同
+2. 假设发生一位错，则$x$在$H$与$Hx$的syndrome全同的那列对应的位发生了错误。
+
+**4.2 陪集**
+设原编码为$C$，则$C$的陪集可以表示为$x+C$。若$C$中有$2^m$个编码，根据拉格朗日定理，应有$2^{n-m}$个陪集。每个陪集中选取weight最小的元素作为coset leader(最大相似度解码)，根据syndrome将接收到的编码$r$减去相应的coset leader即可得到正确的编码$x$。
