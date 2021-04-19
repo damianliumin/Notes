@@ -653,7 +653,7 @@ $d(x,y)$表示编码$x,y$不同的位数，最小距离$d_{\min}$为最小的汉
 **引理：**$x,y$是$n$位二进制元组，则$w(x+y)=d(x,y)$
 **定理：**$d_\min$是群编码$C$的最小距离，则$d_\min = \min\{w(x):x\neq 0\}$
 
-**定义：**矩阵$H\in \mathbb{M}_{m\times n}(\Z_2)$的null space为$n-$元组$x$的集合，其中所有$x$满足$Hx=0$，记为$Null(H)$。称$H$的$Null(H)$得到的编码为线性编码。
+**定义：**矩阵$H\in \mathbb{M}_{m\times n}(\Z_2)$的null space为$n-$元组$x$的集合，其中所有$x$满足$Hx=0$，记为$Null(H)$。称$H$的$Null(H)$得到的编码为**线性编码**。
 
 **定理：**令$H\in \mathbb{M}_{m\times n}(\Z_2)$，则$Null(H)$是群编码。
 
@@ -667,8 +667,8 @@ $$
 
 **生成矩阵的定理：**
 
-1. $H\in\mathbb{M}_{m\times n}(\Z_2)$是conanical parity-check matrix，则Null(H)包含所有前$n-m$位任意，后$m$位由$Hx=0$决定的$x\in\Z_2^n$。最后$m$位中的每位对前$n-m$中的某些位形成偶校验(取决于A和待编码信息)
-2. **线性码数学基础：**G是$n\times k$的标准生成矩阵，则$C=\{y:Gx=y~for~x\in\Z_2^k\}$是$(n,k)-$block code。更具体地，$C$是群编码。
+1. $H\in\mathbb{M}_{m\times n}(\Z_2)$是canonical parity-check matrix，则Null(H)包含所有前$n-m$位任意，后$m$位由$Hx=0$决定的$x\in\Z_2^n$。最后$m$位中的每位对前$n-m$中的某些位形成偶校验(取决于A和待编码信息)
+2. **线性码数学基础：**G是$n\times k$的标准生成矩阵，则$C=\{y:Gx=y~for~x\in\Z_2^k\}$是$(n,k)-$block code。具体地，$C$是群编码。
 3. **线性码数学基础：**令C为G生成的编码，则$y\in C\iff Hy=0$，C是$H$生成的线性码。
 4. **查错：**H是$m\times n$的二进制矩阵，则Null(H)能查一位错$\iff$H任一列不全为0
 5. **纠错**：H是$m\times n$的二进制矩阵，则Null(H)能纠一位错$\iff$H任一列不全为0且没有两列相同($d_\min \geq 3$)
@@ -685,3 +685,4 @@ $$
 
 **4.2 陪集**
 设原编码为$C$，则$C$的陪集可以表示为$x+C$。若$C$中有$2^m$个编码，根据拉格朗日定理，应有$2^{n-m}$个陪集。每个陪集中选取weight最小的元素作为coset leader(最大相似度解码)，根据syndrome将接收到的编码$r$减去相应的coset leader即可得到正确的编码$x$。
+

@@ -245,7 +245,7 @@ void dijkstra(G, s){ // can add predecessor if necessary
 	while(!pq.empty()){
 		pair<int, int> cur = pq.top();
 		pq.pop();
-		int u = cur.first;
+		int u = cur.second;
 		if(vis[u]) continue;
 		vis[u] = true;
 		for(auto &x: edges[u]){

@@ -1,4 +1,4 @@
-# Probability and Mathematical Statistics
+# Probability and Mathematical Statistics I
 
 Author: Daniel Liu
 Contact Me: 191240030@smail.nju.edu.cn
@@ -449,8 +449,3 @@ $$
 p_M(z) = p_X(z)F_Y(z)+F_Z(z)p_Y(z)\\
 p_N(z) = p_X(z)(1-F_Y(z)) + p_Y(z)(1-F_X(z))
 $$
-
-***
-
-
-

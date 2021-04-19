@@ -171,7 +171,6 @@ static page_t* alloc_fast_page(size_t size, int cpu){
     ret->bit_num = ((uintptr_t)(ret + 1) - (uintptr_t)ret->obj_start) / size;
     if(ret->bit_num > 50 * 32)
       ret->bit_num = 50 * 32;
-    spin_unlock(&fast_page_lock);
     return ret;
   } else {
     spin_unlock(&fast_page_lock);
