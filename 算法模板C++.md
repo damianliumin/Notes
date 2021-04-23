@@ -240,8 +240,8 @@ void dijkstra(G, s){ // can add predecessor if necessary
 	for(int i = 1 ;i <= n ;++i)		// init
 		dis[i] = INF;
 	dis[s] = 0;
-	priority_queue<pair<int, int>> pq;
-	pq.push(0, s);
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+	pq.emplace(0, s);
 	while(!pq.empty()){
 		pair<int, int> cur = pq.top();
 		pq.pop();
@@ -252,7 +252,7 @@ void dijkstra(G, s){ // can add predecessor if necessary
 			int v = x.second, weight = x.first;
 			if(dis[u] + weight < dis[v]){
 				dis[v] = dis[u] + weight;
-				pq.push(dis[v], v);
+				pq.emplace(dis[v], v);
 			}
 		}
 	}
