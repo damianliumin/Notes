@@ -52,7 +52,7 @@ P(AB)=P(A)P(B|A)=P(B)P(A|B)
 $$
 对n个事件，若$P(A_1A_2\cdots A_{n-1})>0$，则有：
 $$
-P(A_1A_2\cdots A_n)=P(A_1)P(A_2|A_1)P(A_3|A_1A_1)\cdots P(A_n|A_1A_2\cdots A_{n-1})
+P(A_1A_2\cdots A_n)=P(A_1)P(A_2|A_1)P(A_3|A_1A_2)\cdots P(A_n|A_1A_2\cdots A_{n-1})
 $$
 **5.2 全概率公式**
 设$B_1,B_2,\cdots,B_n$是完备事件组，对任何事件$A$，有
@@ -60,7 +60,6 @@ $$
 P(A)=\sum_{i=1}^nP(B_i)P(A|B_i)
 $$
 **5.3 贝叶斯公式**
-
 设$B_1,B_2,\cdots,B_n$是完备事件组，对任何事件$A$，只要$P(A)>0$，则有
 $$
 P(B_j|A)=\frac{P(AB_j)}{P(A)}=\frac{P(B_j)P(A|B_j)}{\sum^n_{i=1}P(B_i)P(A|B_i)}
