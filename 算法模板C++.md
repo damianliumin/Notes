@@ -501,7 +501,7 @@ int euclid(int a, int b){
     if(b == 0)
         return a;
     else
-        return Euclid(b, a % b);
+        return euclid(b, a % b);
 }
 // 循环实现
 int euclid(int a, int b){

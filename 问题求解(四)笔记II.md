@@ -284,11 +284,20 @@ $\text{CIRCUIT-SAT}=\{\left<C\right>: C\text{ is a satisfiable boolean combinati
 4. 证明$f$满足：$\forall x\in \{0,1\}^*,x\in L' \leftrightarrow  f(x)\in L$
 5. 证明计算$f$的算法是在多项式时间内的
 
+### 5 NP-complete问题
 
-
-
-
-
+**5.1 C-SAT**
+**5.2 SAT** (from C-SAT)
+**5.3 3-CNF-SAT** (from SAT)
+**5.4 CLIQUE** (from 3-CNF-SAT)
+$\text{CLIQUE}=\{\left< G, k\right>:\text{$G$ is a graph containing a clique of size $k$}\}$
+**5.5 VERTEX-COVER** (from CLIQUE)
+$\text{VERTEX-COVER} = \{\left< G,k \right>: \text{$G$ has a vertex cover of size $k$} \}$
+**5.6 HAM-CYCLE** (from VERTEX-COVER)
+**5.7 TSP** (from HAM-CYCLE)
+$\text{TSP}=\{\left<G,c,k\right>: G=(V, E)\text{ is a complete graph,}\\~~~~\text{c is a function from $V\times V\rightarrow \Z$,} \\~~~~\text{$k\in \Z$,}\\~~~~\text{G has a traveling-salesman tour with cost at most $k$} \} $
+**5.8 SUBSET-SUM** (from 3-CNF-SAT)
+$\text{SUBSET-SUM}=\{\left<S,t\right>:\text{$\exists$ subset $S'\subseteq S$ such that $t=\sum_{s\in S'}s$}\}$
 
 
 ***
