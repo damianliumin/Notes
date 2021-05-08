@@ -221,7 +221,7 @@ We say that **U is NP-hard** if $Lang_U$ is NP-hard.
 
 算法$A$**接受 accept**字符串$x\in\{0,1\}^*$：$A(x)=1$，**拒绝 reject** $x$：$A(x)=0$
 算法$A$**接受 accept**语言$L$：$L=\{x\in\{0,1\}^*: A(x)=1\}$
-算法$A$**决定 decide**语言$L：$$A$接受$L$且$\forall x\notin L, A(x)=0$
+算法$A$**判定 decide**语言$L：$$A$接受$L$且$\forall x\notin L, A(x)=0$
 
 在此基础上可以定义：
 $$
@@ -302,7 +302,101 @@ $\text{SUBSET-SUM}=\{\left<S,t\right>:\text{$\exists$ subset $S'\subseteq S$ suc
 
 ***
 
-## 4-10 串匹配 String Matching
+## 4-10 近似算法 Approximation Algorithms
+
+### 1 近似算法概念
+
+**1.1 概念1**
+考虑优化问题$U = (\Sigma_I, \Sigma_O, L, L_I, \mathcal{M}, cost, goal)$及它的一个算法$A$，$\forall x\in L_I$，$A$在$x$上的**相对误差 relative error** $\varepsilon_A(x)$定义为：
+$$
+\varepsilon_A(x)=\frac{|cost(A(x)) - Opt_U(x)|}{Opt_U(x)}
+$$
+$\forall n\in \N$, 定义$A$的相对误差为：
+$$
+\varepsilon_A(n)=\max\{ \varepsilon_A(x)|x\in L_1\cap (\Sigma_I)^n \}
+$$
+$\forall x\in L_I$，$A$在$x$上的**近似比 approximation ratio** $R_A(x)$定义为：
+$$
+R_A(x) = \max \left\{ \frac{cost(A(x))}{Opt_U(x)}, \frac{Opt_U(x)}{cost(A(x))} \right\}
+$$
+$\forall n\in \N$, 定义$A$的近似比为：
+$$
+R_A(n)=\max\{ R_A(x)|x\in L_1\cap (\Sigma_I)^n \}
+$$
+**1.2 概念2**
+$\forall \delta>1$，若$\forall x\in L_I, R_A(x)\leq \delta$，称$A$为$\delta$-近似算法；
+$\forall f:\N\rightarrow \R^+$，若$\forall n\in \N, R_A(n)\leq f(n)$，称$A$为$f(n)$-近似算法.
+
+**1.3 概念3**
+对最小化问题$U$，有
+$$
+R_A(x) = \frac{cost(A(x))}{Opt_U(x)}=1+\varepsilon_A(x)
+$$
+对最大化问题$U$，有
+$$
+R_A(x)=\frac{Opt_U(x)}{cost(A(x))}
+$$
+
+### 2 优化问题分类
+
+**PTAS与FPTAS定义：**对于优化问题$U = (\Sigma_I, \Sigma_O, L, L_I, \mathcal{M}, cost, goal)$，若对于任意$(x,\varepsilon)\in L_I\times \R^+$，算法$A$能以最多为$\varepsilon$的误差计算出可行解$A(x)$，且计算时间$Time_A(x,\varepsilon^{-1})$在$|x|$的多项式内，则称$A$为PTAS (polynomial-time approximation scheme)。若$Time_A(x,\varepsilon^{-1})$也是在$\varepsilon^{-1}$内的，则称$A$为FPTAS (fully polynomial-time approximation scheme)。PTAS和FPTAS算法可在运行时间和误差大小间做取舍。
+
+对$U\in NPO$分类：
+**NPO(I):** 存在FPTAS
+**NPO(II):** 存在PTAS
+**NPO(III): ** $\exists\delta$，存在$\delta$-近似算法($\delta>1$)且$\forall d<\delta$，不存在$d$-近似算法（也即近似率有精确数值下界的近似算法）
+**NPO(IV):** 不存在绝对的$\delta$-近似算法，但存在$f(n)$-近似算法，其中$f(n)$为界于$n$的多项式的函数
+**NPO(V): **存在$f(n)$-近似函数，但是$f(n)$不界于任何$n$的多项式函数
+
+### 3 近似稳定性
+
+**定义：**令$U = (\Sigma_I, \Sigma_O, L, L_I, \mathcal{M}, cost, goal)$和$\overline{U} = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为两个优化问题，其中$L_I\sub L$。任意满足下列条件的函数$h_L:L\rightarrow \R^{\geq0}$称为$\overline{U}$根据$L_I$的**距离函数 distance function**:
+
++ $\forall x\in L_I, h_L(x)=0$
++ $h$是多项式时间可计算的
+
+可以定义:
+$$
+Ball_{r,h}(L_I)=\{ w\in L| h(w)\leq r\}
+$$
+令$p$为正实数，若$\forall 0<r\leq p,~\exists \delta_{r,\varepsilon}\in \R^{>1}$使得$A$为问题$U_r = (\Sigma_I, \Sigma_O, L, Ball_{r, h}(L_I), \mathcal{M}, cost, goal)$的$\delta_{r,\varepsilon}$-近似算法，则称$A$为$p$-stable according to $h$. 若$\forall p\in \R^+$，$A$为p-stable according to h的，则称$A$为stable according to $h$，否则为unstable.
+
+对任意任意正整数$r$，每个函数$f_r:\N\rightarrow \R^{>1}$，若$A$为问题$U_r = (\Sigma_I, \Sigma_O, L, Ball_{r, h}(L_I), \mathcal{M}, cost, goal)$的$f_r(n)$-近似函数，我们称$A$是$(f,f_r(n))$-quasistable according to $h$的。
+
+**定义：**令$U = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$和$\overline{U} = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为两个优化问题，且$L_I\sub L$，令$h$为$\overline{U}$根据$L_I$的距离函数，令$\forall r \in \R^+,U_r = (\Sigma_I, \Sigma_O, L, Ball_{r, h}(L_I), \mathcal{M}, cost, goal)$，$A=\{A_\varepsilon\}_{\varepsilon>0}$为$U$的一个PTAS。若$\forall r>0,\forall \varepsilon > 0$，$A_\varepsilon$为$U_r$的一个$\delta_{r,\varepsilon}$-近似算法，则PTAS算法$A$为stable according to $h$的。
+若$\delta_{r,\varepsilon}\leq f(\epsilon)\cdot g(r)$，其中
+
++ $f$和$g$为从$\R^{\geq 0}$映射到$\R^+$的函数
++ $\lim_{\varepsilon\rightarrow 0}f(\varepsilon)=0$
+
+则我们称PTAS算法$A$为superstable according to $h$的。
+
+### 4 双近似算法
+
+**定义1：**令$U = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为一个优化问题，$U$的一个**受限距离函数 constraint distance function**为满足下列条件的任意函数$h:L_I\times \Sigma_O^*\rightarrow \R^{\geq 0}$:
+
++ $\forall S\in \mathcal{M(x)},h(x,S)=0$
++ $\forall S\notin \mathcal{M(x)},h(x,S)>0$
++ $h$是多项式时间内可计算的
+
+$\forall \varepsilon \in \R^+, \forall x\in L_I,\mathcal{M}_\varepsilon^h(x)=\{S\in \Sigma_O^*|h(x,S)\leq \varepsilon\}$为$\mathcal{M(x)}$的$\varepsilon$-ball according to $h$.
+
+**定义2：**令$U = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为一个优化问题，$h$为U的一个受限距离函数。若$\forall x\in L_I$，满足以下条件时$U$的一个优化算法$A$称为$h$-dual $\varepsilon$-approximation algorithm for $U$：
+
++ $A(x)\in \mathcal{M}_\varepsilon^h(x)$
++ $cost(A(x))\geq Opt_U(x)$ if $goal = maximum$ and $cost(A(x))\leq Opt_U(x)$ if $goal = minimum$
+
+**定义3：**令$U = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为一个优化问题，令$h$为$U$的一个受限距离函数。若满足以下条件，则称$A$为$h$-dual polynomial-time approximation scheme ($h$-dual PTAS for U):
+
++ $\forall$ input $(x,\varepsilon)\in L_I\times \R^+, A(x,\varepsilon)\in \mathcal{M}_\varepsilon^h(x)$
++ $cost(A(x))\geq Opt_U(x)$ if $goal = maximum$ and $cost(A(x))\leq Opt_U(x)$ if $goal = minimum$
++ $Time_A(x,\epsilon^{-1})$是界于$|x|$的多项式的函数
+
+若$Time_A(x,\varepsilon^{-1})$同时也界于$\varepsilon^{-1}$，则称$A$为$h$-dual fully polynomial-time approximation scheme ($h$-dual FPTAS) for $U$.
+
+***
+
+## 4-14 串匹配 String Matching
 
 串匹配String Matching是在$T[1\cdots n]$中寻找模式$P(1\cdots m),m\leq n$，$P,T$中的字符从一个有限字符表$\Sigma$中选取。若$P[1..m]=T[s+1..s+m]$，称$s$是一个合法的shift. 串匹配问题的目标是寻找到所有的合法shift。
 

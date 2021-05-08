@@ -86,7 +86,7 @@ $$
 2. $D(CX)=C^2D(X)$，特别地$D(-X)=D(X)$
 3. $D(X\pm Y)=D(X)+D(Y)\pm 2E\{(X-E(X))(Y-E(Y))\}$
    $X,Y$独立时，$D(X\pm Y)=D(X)+D(Y)$
-4. (切比雪夫不等式)设随机变量$X$的期望$EX$和方差$DX$均存在，则$\forall \epsilon > 0$，$P(|X-EX|\geq \epsilon)\leq \frac{DX}{\epsilon^2}$
+4. (**切比雪夫不等式**)设随机变量$X$的期望$EX$和方差$DX$均存在，则$\forall \epsilon > 0$，$P(|X-EX|\geq \epsilon)\leq \frac{DX}{\epsilon^2}$
 
 **2.3 常用分布的方差**
 (1) 0-1分布：$D(X)=pq$
@@ -100,27 +100,54 @@ $$
 ### 3 矩、协方差与相关系数
 
 **3.1 矩**
-**定义**
+**定义：**对随机变量$X$和非负整数$k$，若$E(|X|^k)<\infty$，则称$EX^k$为$X$的$k$**阶原点矩**，简称$k$**阶矩**。若$E(|X-EX|^k)<\infty$，则称$E(X-EX)^k$为$X$的$k$**阶中心矩**.
 
+一阶矩为$X$的期望，二阶中心矩为方差，二阶矩$EX^2=DX+(EX)^2$
+
+对于标准正态分布$X\sim N(0,1)$，$k$阶矩为：
+$$
+EX^k = \left\{ \begin{matrix} 0,&\text{k为奇数}\\(k-1)!!,&\text{k为偶数} \end{matrix} \right .
+$$
 **3.2 协方差**
-**定义：**
+**定义：**对随机变量$X,Y$，若$E|X|,E|Y|$和$E|(X-EX)(Y-EY)|$都有限，则定义$E[(X-EX)(Y-EY)]$为$X$和$Y$的**协方差**，记为$cov(X,Y)$.
+
+**随机变量方差公式：**
+$$
+D(X\pm Y)=D(X)+D(Y)\pm 2cov(X,Y)\\
+D(X_1+\cdots+X_n) = \sum_{k=1}^nD(X_k)+2\sum_{1\leq i < j \leq n}cov(X_i,X_j)
+$$
+**协方差计算公式：**
+$$
+cov(X,Y)=E(XY)-EX\cdot EY
+$$
 **性质：**
 
 1. $cov(X,k) = 0$
+2. 若$X,Y$独立，则$cov(X,Y)=0$
+3. 方差是特殊的协方差：$cov(X,X)=D(X)$
+4. $cov(X,Y)=cov(Y,X)$
+5. $cov(aX+c_1, bY+c_2)=ab\,cov(X,Y)$
+6. 若$X_1,X_2,Y$的二阶矩有限，则$cov(X_1+X_2,Y)=cov(X_1,Y)+cov(X_2,Y)$
 
+**Cauchy-Schwarz不等式:**
+$$
+[cov(X,Y)]^2\leq D(X)D(Y)
+$$
 **3.3 相关系数**
-**定义：**
+**定义：**设随机变量$X$和$Y$的二阶矩有限，则$D(X)>0,D(Y)>0$，则称
+$$
+\frac{cov(X,Y)}{\sqrt{D(X)D(Y)}}
+$$
+为$X$和$Y$的**相关系数**，记为$\rho_{XY}$.
+
 **性质：**
 
 1. $|\rho_{XY}|\leq 1$
-2. $|\rho_{XY}|=1\iff\exists a,b(a\neq 0),P\{Y=aX+B\}=1$。
+2. $|\rho_{XY}|=1\iff\exists a,b(a\neq 0),P\{Y=aX+b\}=1$。
    且$a>0,\rho=1$，正相关，$a<0,\rho=-1$，负相关。
    $\rho_{XY}$表示$X,Y$存在**线性关系的强弱程度**，$|\rho_{XY}|=0$表示$X,Y$不存在线性关系，称为**不相关**. 
-   ($X,Y$独立$\rightarrow X,Y$不相关$\leftrightarrow \rho_{XY}=0\leftrightarrow cov(x,y)=0\leftrightarrow$)
-   **二维正态分布：**$X,Y$独立$\rightarrow X,Y$不相关
-3. 
-
-
+   $X,Y$独立$\rightarrow X,Y$不相关(反之不成立)$\leftrightarrow \rho_{XY}=0\leftrightarrow cov(x,y)=0\leftrightarrow E(XY)=EX\cdot EY \leftrightarrow\\ D(X\pm Y)=D(X)\pm D(Y)$
+   **二维正态分布：**$X,Y$独立$\leftrightarrow X,Y$不相关
 
 ***
 
@@ -129,6 +156,19 @@ $$
 ### 1 大数定律
 
 **1.1 大数定律的定义**
+**依概率收敛定义**：设$X_1,\cdots,X_n,\cdots$为一列随机变量，若存在随机变量$X$，使得任意给定的$\epsilon>0$，
+$$
+\lim_{n\rightarrow \infty}P(|X_n-X|\geq \epsilon)=0, ~or\\
+\lim_{n\rightarrow \infty}P(|X_n-X|<\epsilon)=1
+$$
+则称**随机变量序列**$\{X_n\}$**依概率收敛于**随机变量$X$，记为$X_n\xrightarrow{P} X$.
+
+**大数定律定义：**对随机变量序列$\{X_n\}$，若任意$\epsilon > 0$，有
+$$
+\lim_{n\rightarrow \infty}P\left(\left| \frac{1}{n} \sum_{k=1}^nX_k - \frac{1}{n}\sum_{k=1}^n EX_k \right| \geq \epsilon \right)=0\\
+\lim_{n\rightarrow \infty} P\left(\left| \frac{1}{n} \sum_{k=1}^nX_k - \frac{1}{n}\sum_{k=1}^n EX_k \right| < \epsilon \right)=1
+$$
+则称$\{X_n\}$服从**大数定律**.
 
 **1.2 马尔可夫大数定律**
 
