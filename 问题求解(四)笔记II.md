@@ -371,7 +371,7 @@ $$
 
 则我们称PTAS算法$A$为superstable according to $h$的。
 
-### 4 双近似算法
+### 4 dual approximation algorithms
 
 **定义1：**令$U = (\Sigma_I, \Sigma_O, L, L, \mathcal{M}, cost, goal)$为一个优化问题，$U$的一个**受限距离函数 constraint distance function**为满足下列条件的任意函数$h:L_I\times \Sigma_O^*\rightarrow \R^{\geq 0}$:
 

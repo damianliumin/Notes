@@ -123,16 +123,13 @@ $$
 **性质：**
 
 1. $cov(X,k) = 0$
-2. 若$X,Y$独立，则$cov(X,Y)=0$
+2. 若$X,Y$独立，则$cov(X,Y)=0$，反之不成立
 3. 方差是特殊的协方差：$cov(X,X)=D(X)$
 4. $cov(X,Y)=cov(Y,X)$
 5. $cov(aX+c_1, bY+c_2)=ab\,cov(X,Y)$
 6. 若$X_1,X_2,Y$的二阶矩有限，则$cov(X_1+X_2,Y)=cov(X_1,Y)+cov(X_2,Y)$
+7. **Cauchy-Schwarz不等式:** $[cov(X,Y)]^2\leq D(X)D(Y)$
 
-**Cauchy-Schwarz不等式:**
-$$
-[cov(X,Y)]^2\leq D(X)D(Y)
-$$
 **3.3 相关系数**
 **定义：**设随机变量$X$和$Y$的二阶矩有限，则$D(X)>0,D(Y)>0$，则称
 $$
@@ -153,6 +150,8 @@ $$
 
 ## Ch5 极限理论
 
+极限理论主要包含**大数定律**与**中心极限定理**，它们反映了随机变量序列的**频率稳 定性**与**分布稳定性**问题。
+
 ### 1 大数定律
 
 **1.1 大数定律的定义**
@@ -168,11 +167,44 @@ $$
 \lim_{n\rightarrow \infty}P\left(\left| \frac{1}{n} \sum_{k=1}^nX_k - \frac{1}{n}\sum_{k=1}^n EX_k \right| \geq \epsilon \right)=0\\
 \lim_{n\rightarrow \infty} P\left(\left| \frac{1}{n} \sum_{k=1}^nX_k - \frac{1}{n}\sum_{k=1}^n EX_k \right| < \epsilon \right)=1
 $$
-则称$\{X_n\}$服从**大数定律**.
+即$\frac{1}{n}\sum_{k=1}^n X_k \xrightarrow{P} \frac{1}{n}\sum_{k=1}^n EX_k $，则称$\{X_n\}$服从**大数定律**.
+(随机变量的平均值依概率收敛于它们数学期望的平均值)
 
 **1.2 马尔可夫大数定律**
+设随机变量$\{X_n\}$满足$\frac{1}{n^2}D(\sum_{k=1}^nX_k)\rightarrow 0~(n\rightarrow \infty)$，则$\{X_n\}$服从大数定律.
 
-Homework: Ch4 - 15~18 20 22  
+**1.3 切比雪夫大数定律**
+设随机变量$X_1, X_2, \cdots, X_N, \cdots$**两两互不相关**，则存在常数$C>0$，使对每个$X_k$，有$D(X_k)<C$，则$\{X_n\}$服从大数定律.
+
+**1.4 独立同分布大数定律**
+设随机变量$X_1, X_2, \cdots, X_N, \cdots$**独立同分布**，$EX_k=\mu, DX_k=\sigma^2<\infty$，则$\{X_n\}$服从大数定律，即$\frac{1}{n}\sum_{k=1}^n X_k\xrightarrow{P}\mu$.
+
+**1.5 贝努里大数定律**
+设$\mu_n$为$n$重贝努里试验中事件$A$发生的次数，$p=P(A)$，则对任意$\varepsilon > 0$有$\lim_{n\rightarrow \infty}P\{|\frac{\mu_n}{n}-p|\geq \varepsilon\}=0$或$\lim_{n\rightarrow \infty}P\{|\frac{\mu_n}{n}-p|< \varepsilon\}=1$.
+
+该定理给出了频率的稳定性的严格的数学意义。
+
+### 2 中心极限定理
+
+**2.1 标准化的随机变量**
+若随机变量$X$满足$EX=0,DX=1$，则称$X$为标准化的随机变量。对任意随机变量$X$，$Y=\frac{X-EX}{\sqrt{DX}}$是标准化的随机变量.
+
+**2.2 中心极限定理**
+**定理1：独立同分布的中心极限定理**
+设$X_1,\cdots, X_n,\cdots$独立同分布，且$EX_k=\mu, DX_k=\sigma^2,(k=1,2,\cdots)$。令$Z_n=\frac{\sum_{k=1}^nX_k-n\mu}{\sqrt{n}\sigma}$，则对任意$x$有
+$$
+\lim_{n\rightarrow\infty} P(Z_n\leq x) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^x e^{-\frac{t^2}{2}}dt=\Phi(x)
+$$
+表示$Z_n$的极限分布为标准正态分布。
+
+（中心极限定理的本质是：$\sum_{k=1}^nX_k$的极限分布为正态分布，渐近分布为$N\{E(\sum_{k=1}^nX_k), D(\sum_{k=1}^n X_k)\}$）
+
+**定理2：贝努里情形的中心极限定理（拉普拉斯中心极限定理）**
+设$\mu_n$是$n$重贝努里试验中$A$发生的次数，$p=P(A)$，则对任意$x\in\R$有：
+$$
+\lim_{n\rightarrow \infty} P\{\frac{\mu_n - np}{\sqrt{npq}}\leq x \} =\frac{1}{\sqrt{2\pi}}\int_{-\infty}^x e^{-\frac{t^2}{2}}dt=\Phi(x)
+$$
+（本质是$\mu_n\sim B(n, p)$，则$\mu_n$的极限分布是正态分布）
 
 
 
