@@ -12,11 +12,17 @@ include ../Makefile.lab
 image: git
 
 test: git
-	@gcc $(shell find src/ -name "*.c")  \
-		$(shell find test/ -name "*.c") \
-		-Iframework -Itest -DTEST -lpthread \
-		-o build/test
+	# @gcc $(shell find src/ -name "*.c")  \
+	# 	$(shell find test/ -name "*.c") \
+	# 	-Iframework -Itest -DTEST -lpthread \
+	# 	-o build/test
 	# @build/test 0 > test/log/log_test0.txt
 	# @python3 test/check.py 0
-	@build/test 1 > test/log/log_test1.txt
+	# @build/test 1 > test/log/log_test1.txt
 	@python3 test/check.py 1
+
+debug: build-arg
+	qemu-system-x86_64 $(QEMU_FLAGS) -gdb tcp::1234 -S
+
+gdb: git
+	gdb -s build/kernel-x86_64-qemu.elf -x ./.gdbinit

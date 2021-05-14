@@ -3,8 +3,8 @@
 #include <kernel.h>
 #include <klib.h>
 #include <klib-macros.h>
-
-#define DEBUG_LOCAL
+ 
+#define CPU_NUM 8
 
 #define MB * 1024 * 1024
 #define KB * 1024
@@ -15,17 +15,63 @@
 #define INT_MAX 2147483647
 #define INT_MIN (-2147483648)
 
+/********** DEBUG **********/
+#define DEBUG_LOCAL
+
+#ifdef DEBUG_LOCAL
+extern spinlock_t print_lock;
+extern task_t *task_list_cur;
+
+void debug_sign(int);  
+void debug_init();
+void test_basic_kmt();
+void test_spinlock();
+void test_create_teardown();
+void create_thread();
+
+#define Log(...) \
+  { spin_lock(&print_lock);\
+  printf(__VA_ARGS__);\
+  spin_unlock(&print_lock); }
+
+#define Trace(s)\
+  { \
+    spin_lock(&print_lock); \
+    putstr(s); \
+    spin_unlock(&print_lock); \
+  }
+
+#define Assert(cond, sign, ...) \
+  { \
+    if(!(cond)){ \
+      debug_sign(sign); \
+      putstr(__VA_ARGS__); \
+    } \
+  }
+
+
+#else
+#define Log(...) {(void)0;}
+#define Trace(...) {(void)0;}
+#define Assert(...) {(void)0;}
+#endif
+
 /********** spinlock **********/
 typedef struct spinlock {
   intptr_t locked;
   const char *name;
+  int cpu;
 } spinlock_t;
 
 void spin_init(spinlock_t *lk, const char *name);
 void spin_lock(spinlock_t *lk);
 void spin_unlock(spinlock_t *lk);
+bool holding_spinlock(spinlock_t *lk);
 
 /********** pmm **********/
+#define SAFE_PMM
+
+#ifndef SAFE_PMM
 #define HDR_SIZE 256
 #define PAGE_SIZE (32 KB)
 #define SLAB_SIZE (16 MB)
@@ -35,7 +81,6 @@ void spin_unlock(spinlock_t *lk);
 #define MAX_SLOW_SLAB_NUM  MAX_SLAB_NUM
 #define FAST_SLAB_TYPE_NUM 12
 
-#define CPU_NUM 8
 #define FULL 0xffffffff
 #define EMPTY 0x0
 
@@ -77,10 +122,11 @@ typedef struct kheap_slow{
   void* start;
   uint16_t map[SLOW_SLAB_SIZE / PAGE_SIZE]; // 512 * 32KB = 16MB
 } kheap_slow_t;
+#endif
 
 /********** kmt **********/
 #define MAX_HANDLER_NUM 64
-#define STACK_SIZE (4 KB)
+#define STACK_SIZE (16 KB)
 #define CANARY 0x98765432
 
 typedef struct handler_info{  // for os->trap
@@ -97,7 +143,7 @@ typedef struct cpu_info{
 
 extern cpu_info cpu_task[CPU_NUM];
 
-enum task_status { RUN = 1, SLEEP, BLOCK, };
+enum task_status { RUN = 1, SLEEP, BLOCK, ERROR};
 
 typedef struct task{
   task_t *next, *prev;
@@ -106,6 +152,7 @@ typedef struct task{
   task_t *sem_next;
   void *stack;
   const char *name;
+  int cpu;
 } task_t;
 
 /********** semaphore **********/

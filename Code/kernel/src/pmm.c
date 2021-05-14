@@ -1,5 +1,6 @@
 #include <common.h>
 
+#ifndef SAFE_PMM
 
 static bool pmm_inited = false;
 
@@ -270,31 +271,9 @@ static void kfree(void *ptr) {
   }
 }
 
-static void *kalloc_safe(size_t size) {
-  bool i = ienabled();
-  iset(false);
-  void *ret = kalloc(size);
-  if (i) iset(true);
-  return ret;
-}
-
-static void kfree_safe(void *ptr) {
-  int i = ienabled();
-  iset(false);
-  kfree(ptr);
-  if (i) iset(true);
-}
-
 static void pmm_init() {
-  #ifndef TEST
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
-  #else
-  heap.start = malloc(HEAP_SIZE);
-  heap.end   = (char*)heap.start + HEAP_SIZE;
-  printf("Got %d MiB heap: [%p, %p)\n", HEAP_SIZE >> 20, heap.start, heap.end);
-  cpulock_init();
-  #endif
   /* allign heap size */
   if((uintptr_t)heap.start % SLAB_SIZE != 0)
     heap_start = (void*)((uintptr_t)heap.start + SLAB_SIZE - (uintptr_t)heap.start % (SLAB_SIZE));
@@ -310,6 +289,58 @@ static void pmm_init() {
   spin_init(&slow_slab_lock, NULL);
   spin_init(&fast_page_lock, NULL);
   pmm_inited = true;
+}
+
+#else
+
+spinlock_t pmm_lock;
+void *cur = NULL;
+
+static inline size_t allign_size(size_t size){
+  size_t ret = 1;
+  while(ret < size)
+    ret <<= 1;
+  return ret;
+}
+
+static void *kalloc(size_t size){
+  spin_lock(&pmm_lock);
+  size = allign_size(size);
+  if((intptr_t)cur % size != 0)
+    cur = (char*)cur + (size - (intptr_t)cur % size);
+  void *ret = cur;
+  cur += size;
+  // printf("ret: %p size: %x\n", ret, size);
+  Log("[%p, %p)\n", ret, ret+size)
+  spin_unlock(&pmm_lock);
+  return ret;
+}
+
+static void kfree(void *ptr){
+}
+
+static void pmm_init() {
+  uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
+  printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
+  spin_init(&pmm_lock, "pmm lock");
+  cur = heap.start;
+}
+
+#endif
+
+static void *kalloc_safe(size_t size) {
+  bool i = ienabled();
+  iset(false);
+  void *ret = kalloc(size);
+  if (i) iset(true);
+  return ret;
+}
+
+static void kfree_safe(void *ptr) {
+  int i = ienabled();
+  iset(false);
+  kfree(ptr);
+  if (i) iset(true);
 }
 
 MODULE_DEF(pmm) = {
