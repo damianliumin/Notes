@@ -396,6 +396,78 @@ $\forall \varepsilon \in \R^+, \forall x\in L_I,\mathcal{M}_\varepsilon^h(x)=\{S
 
 ***
 
+## 4-11 随机算法 Randomized Algorithms
+
+### 1 随机算法基本概念
+
+**1.1 概率空间**
+**定义：**随机算法$A$在输入$x$上的一次运行$C$，记概率为$Prob_{A,x}(C)$。$A$在$x$上输出$y$的概率$Prob(A(x)=y)$为$C$输出$y$的概率$Prob_{A,x}(C)$的和。随机算法的目标是：若$y$为$x$的正确输出，尽量提高$Prob(A(x)=y)$.
+
+记$Random_A(x)$为算法$A$在$x$上所有随机运行过程中随机位数的最大值。$\forall n \in \N$，有
+$$
+Random_A(n) = \max\{Random_A(x) | x \text{ is an input of size }n \}
+$$
+**1.2 时间复杂度**
+随机算法的时间复杂度用**期望时间复杂度**表示，有两种表示方法：
+$$
+Exp-Time_A(x)=E[Time]=\sum_C Prob_{A,x}(C)\times Times(C)\\
+Exp-Time_A(n)=\max\{Exp-Time_A(x)|x\text{ is an input of size }n \}
+$$
+或：
+$$
+Time_A(x) = \max\{Time(C)|C\text{ is a run of $A$ on $x$}\}\\
+Time_A(n) = \max\{Time_A(x)|x \text{ is an input of size }n \}
+$$
+前者给出了更精确的复杂度，但是很难计算。后者是期望的最坏情况复杂度。
+
+### 2 随机算法分类
+
+**2.1 Las Vegas 算法**
+**第一类定义：**随机算法$A$是计算问题$F$的Las Vegas算法 if $F$的任意输入实例$x$满足：
+$$
+Prob(A(x)=F(x))=1
+$$
+其中$F(x)$是$F$在输入实例下的解。这一类Las Vegas算法保证结果正确，用$Exp-Time_A(n)$分析复杂度。
+
+**第二类定义：**随机算法$A$是计算问题$F$的Las Vegas算法 if $F$的任意输入实例$x$满足：
+$$
+Prob(A(x)=F(x))\geq \frac{1}{2}\\
+Prob(A(x)=?)=1-Prob(A(x)=F(x))\leq \frac{1}{2}
+$$
+
+其中$F(x)$是$F$在输入实例下的解。这一类Las Vegas算法多数情况下正确，并且可以保持沉默但用不犯错（找到正确解的概率随着计算时间的增加而显著提高，正确概率可以接受）。其复杂度用$Time_A(n)$表示。
+
+通常用第一类处理函数计算问题，相对而言计算复杂度不是很大，利用随机特性进行优化或避免什么；用第二类处理判定问题，相对计算复杂度很大，用随机特性进行降阶。
+
+**2.2 One-Sided Error Monte Carlo算法**
+**定义：**考虑决策问题。令$L$为一个语言，$A$为随机算法。$A$为one-sided-error Monte Carlo Algorithm recognizing $L$ if
+
+1. $\forall x\in L, Prob(A(x)=1)\geq \frac{1}{2}$
+2. $\forall x\notin L, Prob(A(x)=0)=1$
+
+**2.3 Two-Sided Error Monte Carlo算法**
+**定义：**令$F$为问题，称随机算法$A$为two-sided-error Monte Carlo Algorithm computing $F$ if $\exists \epsilon, 0<\epsilon <\frac{1}{2}$，使得对于\$F$的每一个输入$x$
+$$
+Prob(A(x)=F(x))\geq \frac{1}{2}+\epsilon
+$$
+**2.4 Unbounded-Error Monte Carlo算法**
+**定义：**这些随机算法统称为蒙特卡洛算法 Monte Carlo algorithms。令$F$为问题，称随机算法$A$为Unbounded-error Monte Carlo Algorithm computing $F$ if $F$的每个输入$x$
+$$
+Prob(A(x)=F(x))>\frac{1}{2}
+$$
+**2.5 Randomized Optimization Algorithms**
+
+### 3 随机算法设计范式
+
+1. Foling an adversary.
+2. Abundance of witnesses.
+3. Fingerprinting.
+4. Random sampling.
+5. Relaxation and random rounding.
+
+
+***
+
 ## 4-14 串匹配 String Matching
 
 串匹配String Matching是在$T[1\cdots n]$中寻找模式$P(1\cdots m),m\leq n$，$P,T$中的字符从一个有限字符表$\Sigma$中选取。若$P[1..m]=T[s+1..s+m]$，称$s$是一个合法的shift. 串匹配问题的目标是寻找到所有的合法shift。
@@ -536,8 +608,6 @@ COMPUTE-PREFIX-FUNCTION(P)
 通过摊还分析可以证明预处理的复杂度为$\Theta(m)$，匹配的复杂度为$\Theta(n)$.
 
 ***
-
-
 
 
 
