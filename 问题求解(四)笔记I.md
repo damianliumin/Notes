@@ -396,7 +396,7 @@ int Extended_Euclid(int a, int b, int &x, int &y){
     int ret = Extended_Euclid(b, a % b, x, y);
     int tmp = x;
     x = y;
-    y = tmp - a / b * y;
+    y = tmp - a / b * x;
     return ret;
 }
 ```

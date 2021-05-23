@@ -524,8 +524,8 @@ ll ext_euclid(ll a, ll b, ll &x, ll &y){  // ax + by = 1
         x = 1, y = 0;
         return a;
     }
-    ll d = Extended_Euclid(b, a % b, y, x);
-    y -= a / b * y;
+    ll d = ext_euclid(b, a % b, y, x);
+    y -= a / b * x;
     return d;
 }
 ```
@@ -645,12 +645,12 @@ int mod_eq_solve(int a, int b, int n){
 ```c++
 ll inverse(ll a, ll b){ // use ax + by = 1
     ll x, y;
-    ext_euclid(a, b, &x, &y);
+    ext_euclid(a, b, x, y);
 	return x;
 }
 
 ll inverse(ll a, ll q){  // use Fermat Th, q must be a prime!
-    return qpow(a, q-2, q)
+    return qpow(a, q-2, q);
 }
 ```
 
@@ -869,6 +869,7 @@ node* make_set(int val){
     return new node(val);
 }
 void link(node* x, node* y){
+    if(x == y) return;
     if(x->rank > y->rank)
         y->p = x;
     else{

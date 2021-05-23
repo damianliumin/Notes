@@ -4,150 +4,6 @@ Author: Daniel Liu
 Contact Me: 191240030@smail.nju.edu.cn
 Course: Probability and Mathematical Statistics. NJU
 
-## Ch4 随机变量的数字特征
-
-### 1 数学期望
-
-**1.1 定义**
-(1) 设**离散型随机变量X**的分布律为$P(X=x_i)=p_i,i=1,2,\cdots$，若级数$\sum_{i=1}^{+\infty}|x_i|p_i$收敛(绝对收敛)，则称$\sum_{i=1}^{+\infty}x_ip_i$为$X$的数学期望，即
-$$
-EX=\sum_{i=1}^{+\infty}x_ip_i
-$$
-(2) 设连续型随机变量X的密度为$p(x)$，若积分$\int_{-\infty}^{+\infty}|x|p(x)dx < \infty$，则定义$X$的数学期望EX为
-$$
-EX=\int_{-\infty}^{+\infty}xp(x)dx
-$$
-**1.2 常见分布的数学期望**
-(1) 0-1分布 $B(p)$
-$$
-EX = p
-$$
-(2) 二项分布 $B(n,p),0<p<1$，$P(X=k)=C_n^kp^k(1-p)^{n-k},k=0,1,\cdots,n$
-$$
-EX=np
-$$
-(3) 泊松分布 $P(\lambda),\lambda>0$，$P(X=k)=\frac{\lambda^k}{k!}e^{-\lambda},k=0,1,\cdots$
-$$
-EX=\lambda
-$$
-(4) 几何分布 $G(p)$，$P(X=k)=(1-p)^{k-1}p,k=1,2\cdots$
-$$
-EX=\frac{1}{p}
-$$
-(5) 均匀分布 $U[a,b],-\infty < a < b < +\infty$，$p(x)=\frac{1}{b-a}I_{[a,b]}(x)$
-$$
-EX=\frac{a+b}{2}
-$$
-(6) 指数分布 $e(\lambda),\lambda>0$，$p(x)=\lambda e^{-\lambda x},x>0$
-$$
-EX=\frac{1}{\lambda}
-$$
-(7) 正态分布 $N(\mu, \sigma^2)$，$p(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{\frac{-(x-\mu)^2}{2\sigma^2}},x\in\R$
-$$
-EX=\mu
-$$
-**PS. 示性函数**
-$I_A=\left\{\begin{matrix}1,&\textbf{A发生}\\0,&\textbf{A不发生}  \end{matrix}\right. $，$EI_A=P(A)$.
-
-**1.3 随机变量函数的数学期望**
-**定理1：**若X的函数$Y=g(X)$也是一个随机变量，设$g(X)$的数学期望存在：
-(1) 若$X$为离散型随机变量，其分布律为$P(X=x_k)=p_k,k=1,2,\cdots$，则Y的数学期望为
-$$
-EY=E[g(X)]=\sum_{k=1}^{+\infty}g(x_k)P(X=x_k)=\sum_{k=1}^{+\infty}g(x_k)p_k
-$$
-(2) 若$X$为连续型随机变量，其密度为$p(x)$，则
-$$
-EY=E[g(X)]=\int_{-\infty}^{+\infty}g(x)p(x)dx
-$$
-**定理2：**设随机向量$(X,Y)$的函数$Z=g(X,Y)$是一个随机变量，且期望存在：
-(1) 若$(X,Y)$为离散型随机向量，其联合分布律为$P(X=x_i,Y=y_j)=p_{ij},i,j=1,2,\cdots$，则
-$$
-EZ=E[g(X,Y)]=\sum_{i=1}^{+\infty}\sum_{j=1}^{+\infty}g(x_i,y_j)p_{ij}
-$$
-(2) 若$(X,Y)$为连续型随机向量，其联合密度为$p(x,y)$，则
-$$
-EZ=E[g(X,Y)]=\int_{-\infty}^{+\infty}\int_{-\infty}^{\infty}g(x,y)p(x,y)dxdy
-$$
-**1.4 数学期望的性质**
-
-1. 对常数$a,b$，若$a\leq X\leq b$，则$a\leq EX\leq b$，特别地，$E(a)=a$
-2. **任意**随机变量$X,Y$，若它们的数学期望存在，则对任意有限常数$a,b,E(aX+bY)=aEX+bEY$.
-3. 若$X,Y$**相互独立**，则$E(XY)=E(X)E(Y)$
-
-### 2 方差
-
-**2.1 方差定义**
-若$EX^2<+\infty$，则称$E(X-EX)^2$为随机变量$X$的方差，记为$D(X)$或$Var(X)$. 称$\sigma(X)=\sqrt{D(X)}$为$X$的**均方差**或**标准差**。
-**计算方法**：$D(X)=EX^2-(EX)^2$
-
-**2.2 方差的性质**
-
-1. 设C为常数，$D(C)=0$。另外，$D(X)=0\iff X$以概率1取常数$C$
-2. $D(CX)=C^2D(X)$，特别地$D(-X)=D(X)$
-3. $D(X\pm Y)=D(X)+D(Y)\pm 2E\{(X-E(X))(Y-E(Y))\}$
-   $X,Y$独立时，$D(X\pm Y)=D(X)+D(Y)$
-4. (**切比雪夫不等式**)设随机变量$X$的期望$EX$和方差$DX$均存在，则$\forall \epsilon > 0$，$P(|X-EX|\geq \epsilon)\leq \frac{DX}{\epsilon^2}$
-
-**2.3 常用分布的方差**
-(1) 0-1分布：$D(X)=pq$
-(2) 二项分布：$D(X)=npq$
-(3) 泊松分布：$D(X)=\lambda$
-(4) 几何分布：$D(X)=\frac{1-p}{p^2}$
-(5) 均匀分布：$D(X)=\frac{(b-a)^2}{12}$
-(6) 指数分布：$D(X)=\frac{1}{\lambda^2}$
-(7) 正态分布：$D(X)=\sigma^2$
-
-### 3 矩、协方差与相关系数
-
-**3.1 矩**
-**定义：**对随机变量$X$和非负整数$k$，若$E(|X|^k)<\infty$，则称$EX^k$为$X$的$k$**阶原点矩**，简称$k$**阶矩**。若$E(|X-EX|^k)<\infty$，则称$E(X-EX)^k$为$X$的$k$**阶中心矩**.
-
-一阶矩为$X$的期望，二阶中心矩为方差，二阶矩$EX^2=DX+(EX)^2$
-
-对于标准正态分布$X\sim N(0,1)$，$k$阶矩为：
-$$
-EX^k = \left\{ \begin{matrix} 0,&\text{k为奇数}\\(k-1)!!,&\text{k为偶数} \end{matrix} \right .
-$$
-**3.2 协方差**
-**定义：**对随机变量$X,Y$，若$E|X|,E|Y|$和$E|(X-EX)(Y-EY)|$都有限，则定义$E[(X-EX)(Y-EY)]$为$X$和$Y$的**协方差**，记为$cov(X,Y)$.
-
-**随机变量方差公式：**
-$$
-D(X\pm Y)=D(X)+D(Y)\pm 2cov(X,Y)\\
-D(X_1+\cdots+X_n) = \sum_{k=1}^nD(X_k)+2\sum_{1\leq i < j \leq n}cov(X_i,X_j)
-$$
-**协方差计算公式：**
-$$
-cov(X,Y)=E(XY)-EX\cdot EY
-$$
-**性质：**
-
-1. $cov(X,k) = 0$
-2. 若$X,Y$独立，则$cov(X,Y)=0$，反之不成立
-3. 方差是特殊的协方差：$cov(X,X)=D(X)$
-4. $cov(X,Y)=cov(Y,X)$
-5. $cov(aX+c_1, bY+c_2)=ab\,cov(X,Y)$
-6. 若$X_1,X_2,Y$的二阶矩有限，则$cov(X_1+X_2,Y)=cov(X_1,Y)+cov(X_2,Y)$
-7. **Cauchy-Schwarz不等式:** $[cov(X,Y)]^2\leq D(X)D(Y)$
-
-**3.3 相关系数**
-**定义：**设随机变量$X$和$Y$的二阶矩有限，则$D(X)>0,D(Y)>0$，则称
-$$
-\frac{cov(X,Y)}{\sqrt{D(X)D(Y)}}
-$$
-为$X$和$Y$的**相关系数**，记为$\rho_{XY}$.
-
-**性质：**
-
-1. $|\rho_{XY}|\leq 1$
-2. $|\rho_{XY}|=1\iff\exists a,b(a\neq 0),P\{Y=aX+b\}=1$。
-   且$a>0,\rho=1$，正相关，$a<0,\rho=-1$，负相关。
-   $\rho_{XY}$表示$X,Y$存在**线性关系的强弱程度**，$|\rho_{XY}|=0$表示$X,Y$不存在线性关系，称为**不相关**. 
-   $X,Y$独立$\rightarrow X,Y$不相关(反之不成立)$\leftrightarrow \rho_{XY}=0\leftrightarrow cov(x,y)=0\leftrightarrow E(XY)=EX\cdot EY \leftrightarrow\\ D(X\pm Y)=D(X)\pm D(Y)$
-   **二维正态分布：**$X,Y$独立$\leftrightarrow X,Y$不相关
-
-***
-
 ## Ch5 极限理论
 
 极限理论主要包含**大数定律**与**中心极限定理**，它们反映了随机变量序列的**频率稳 定性**与**分布稳定性**问题。
@@ -208,7 +64,184 @@ $$
 
 ***
 
+## Ch6 样本及抽样分布
 
+### 1 基本概念
+
+**1.1 样本**
+**总体：**研究对象的某项数量指标的值的全体
+**个体：**总体中的每个元素为个体
+
+**样本定义：**设随机变量$X$的分布函数是$F(x)$，若$X_1,\cdots,X_n$是**具有同一分布函数**$F$的**相互独立**的随机变量， 则称$X_1,\cdots,X_n$为从总体$X$中得到的容量为$n$的**简单随机样本**，简称为样本，其观察值$x_1,\cdots, x_n$称为样本值。
+由定义可知，若$X_1,\cdots,X_n$为$X$的一个样本，则$X_1,\cdots,X_n$的联合分布函数为：
+$$
+F^*(x_1,\cdots,x_n)=\prod_{i=1}^nF(x_i)
+$$
+设$X$的密度为$p(x)$，则$X_1,\cdots, X_n$的联合概率密度为：
+$$
+p^*(x_1,\cdots,x_n)=\prod_{i=1}^np(x_i)
+$$
+**1.2 统计量**
+**统计量定义：**设$X_1,\cdots,X_n$为来自总体$X$的一个样本，$g(X_1,\cdots,X_n)$是$X_1,\cdots,X_n$的函数，若$g$是连续函数，且$g$中不含任何**未知**参数，则称$g(X_1,\cdots,X_n)$为一个**统计量**。设$x_1,\cdots,x_n$是$(X_1,\cdots,X_n)$的样本值，则称$g(x_1,\cdots,x_n)$是$g(X_1,\cdots,X_n)$的**观察值**。
+（注意：**统计量是随机变量**）
+
+**常用的统计量：**
+样本均值：$\overline{X}=\frac{1}{n}\sum_{i=1}^nX_i$
+样本方差：$S_n^2=\frac{1}{n}\sum_{i=1}^n(X_i-\overline{X})^2=\frac{1}{n}\sum_{i=1}^nX_i^2-\bar{X}^2$
+样本方差(修正)：$S_{n-1}^2=\frac{1}{n-1}\sum_{i=1}^n(X_i-\overline{X})^2$
+样本标准差：$S_n=\sqrt{S_n^2}=\sqrt{\frac{1}{n}\sum_{i=1}^n(X_i-\overline{X})^2}$
+样本$k$阶(原点)矩：$A_k=\frac{1}{n}\sum_{i=1}^nX_i^k~~k=1,2,\cdots$
+样本$k$阶中心矩：$B_k=\frac{1}{n}\sum_{i=1}^n(X_i-\overline{X})^k~~k=1,2,\cdots$
+
+根据上述统计量可计算其观察值。统计量是样本的函数，它是一个随机变量，统计量的分布称为**抽样分布**。
+
+**结论1：**设$X_1,\cdots,X_n$为来自总体$X$的一个样本，$EX=\mu, DX=\sigma^2$，$\overline{X}$为样本均值，则$E\overline{X}=\mu, D\overline{X}=\frac{\sigma^2}{n}$.
+**结论2：**设$X_1,\cdots,X_n$为来自总体$X$的一个样本，$EX=\mu, DX=\sigma^2$，$S_n^2$为样本方差，则$ES_n^2=\frac{n-1}{n}\sigma^2$.
+
+### 2 抽样分布
+
+**2.1 正态总体样本的线性函数的分布**
+设$X_1,\cdots,X_n$是来自正态总体$X\sim N(\mu, \sigma^2)$的样本，则随机变量$U=a_1X_1+a_2X_2+\cdots+a_nX_n$也服从正态分布：
+$$
+U\sim N(\mu\sum_{i=1}^na_i, \sigma^2\sum_{i=1}^n a_i^2)
+$$
+特别地，若取$a_i=\frac{1}{n},(i=1,2,\cdots,n)$，则有$U=\overline{X}$，$\frac{\overline{X}-\mu}{\sigma / \sqrt{n}}\sim N(0,1)$.
+
+**标准正态分布的上$\alpha$分位点**：设$X\sim N(0,1)$满足$P(X>u_\alpha)=\alpha$的$u_\alpha$值称为$N(0,1)$的上$\alpha$分位点。
+$\Phi(u_\alpha)=P(X\leq u_\alpha)=1-\alpha$
+
+**2.2 $\chi^2$分布**
+**定义：**设$X_1,X_2,\cdots,X_n$相互独立，都服从正态分布$N(0,1)$，则称随机变量
+$$
+\chi^2=X_1^2+X_2^2+\cdots+X_n^2
+$$
+所服从的分布为自由度为$n$的$\chi^2$分布，记为$\chi^2\sim \chi^2(n)$.
+
+$\chi^2(n)$**概率密度**为
+$$
+p(x)=\left\{ \begin{matrix}\frac{1}{2^{\frac{n}{2}}\Gamma(\frac{n}{2})}e^{-\frac{x}{2}}x^{\frac{n}{2}-1} & x>0 \\
+0 & x \leq 0 \end{matrix} \right.
+$$
+**性质：**
+
+1. 设$X_1\sim \chi^2(n_1), X_2\sim \chi^2(n_2)$，且$X_1, X_2$相互独立，则$X_1+X_2\sim \chi^2(n_1+n_2)$. (可加性)
+2. 若$X\sim \chi^2(n)$，则$E(X)=n, D(X)=2n$.
+
+**分位点：**对于给定的$\alpha~(0<\alpha < 1)$，称满足条件$P\{\chi^2>\chi^2_\alpha(n)\}=\alpha$的点$\chi_\alpha^2(n)$为$\chi^2(n)$分布的**上$\alpha$分位点.** 对于不同的$\alpha, n$可通过查表求得上$\alpha$分位点的值.
+（一般1~45可查表，$n>45$有近似公式$\chi_\alpha^2(n)=\frac{1}{2}(u_\alpha+\sqrt{2n-1})^2$）
+
+**2.3 t分布**(student 分布)
+**定义：**设$X\sim N(0,1), Y\sim\chi^2(n)$，且$X,Y$独立，则称随机变量$T=\frac{X}{\sqrt{Y/n}}$服从自由度为$n$的$t$分布，记为$T\sim t(n)$.
+
+**概率密度函数**：
+$$
+p(t)=\frac{\Gamma(\frac{n+1}{2})}{\sqrt{n\pi}\Gamma(\frac{n}{2})}(1+\frac{t^2}{n})^{-\frac{n+1}{2}},~~-\infty<t<+\infty
+$$
+**性质：**$t$分布的密度函数关于$t=0$对称，当$n$充分大时，密度函数$p(t)$近似于$N(0,1)$的密度$\Phi(t)$. 即
+$$
+\lim_{n\rightarrow \infty}p(t) = \frac{1}{\sqrt{2\pi}}e^{-t^2/2}
+$$
+**分位点：**$T\sim t(n)$，对于给定的$\alpha~(0<\alpha < 1)$，称满足条件$P\{T>t_\alpha(n)\}=\alpha$的点$t_\alpha(n)$为$t(n)$分布的**上$\alpha$分位点**。可通过查表获取$t_\alpha(n)$。
+$t$分布的上$\alpha$分位点有性质：$t_{1-\alpha}(n) = -t_\alpha(n)$.
+
+**2.4 F分布**
+定义：设$U\sim \chi^2(n_1), V\sim \chi^2(n_2)$，且$U,V$独立，则称随机变量$F=\frac{U/n_1}{V/n_2}$服从自由度为$(n_1,n_2)$的$F$分布，记为$F\sim F(n_1,n_2)$.
+
+**概率密度：**
+$$
+p(x)=\left\{\begin{matrix} \frac{\Gamma(\frac{n_1+n_2}{2})(\frac{n_1}{n_2})^{\frac{n_1}{2}}x^{\frac{n_1}{2}-1}}{\Gamma(\frac{n_1}{2})\Gamma(\frac{n_2}{2}[1+(\frac{n_1x}{n_2})]^{\frac{n_1+n_2}{2}})} & x> 0\\
+0 & otherwise
+
+\end{matrix}\right.
+$$
+**分位点：**对于给定的$\alpha~(0< \alpha < 1)$，称满足条件$p\{F>F_\alpha(n_1,n_2)\}=\alpha$的点$F_\alpha(n_1, n_2)$为$F(n_1, n_2)$分布的上$\alpha$分位点。
+
+**性质：**
+
+1. 若$F\sim F(n_1, n_2)$，则$\frac{1}{F}\sim F(n_2, n_1)$.
+2. $F_{1-\alpha}(n_1, n_2) = \frac{1}{F_\alpha(n_2, n_1)}$.
+
+($X\sim t(n)$，则$X^2\sim F(1, n)$)
+
+ **2.5 正态总体的样本均值与样本方差的分布**
+**定理1：样本均值的分布：**设$X_1,\cdots,X_n$是来自正态总体$X\sim N(\mu, \sigma^2)$的样本，$\overline{X}=\frac{1}{n}\sum_{i=1}^n X_i$:
+$$
+\frac{\overline{X}-\mu}{\sigma / \sqrt{n}}\sim N(0,1)
+$$
+**定理2：样本方差的分布：**设$X_1,\cdots,X_n$是来自正态总体$N(\mu, \sigma^2)$的样本，$\overline{X}$和$S_n^2$分别为样本均值和样本方差，则有
+
+1. $\frac{nS_n^2}{\sigma^2}\sim \chi^2(n-1)$ （或$\frac{(n-1)S_{n-1}^2}{\sigma^2}\sim \chi^2(n-1)$）
+2. $\overline{X}$与$S_n^2$独立
+
+**定理3：**设$X_1,\cdots,X_n$是来自正态总体$N(\mu, \sigma^2)$的样本，$\overline{X}$和$S_n^2$分别为样本均值和样本方差，则有
+$$
+\frac{\overline{X}-\mu}{S_n / \sqrt{n-1}}\sim t(n-1)~(\text{or }\frac{\overline{X}-\mu}{S_{n-1} / \sqrt{n}}\sim t(n-1))
+$$
+**定理4: (双正态总体样本均值差、样本方差比的分布)**设$X\sim N(\mu_1, \sigma_1^2), Y\sim N(\mu_2, \sigma_2^2)$，且$X$与$Y$独立，$X_1,\cdots,X_{n_1}$是来自$X$的样本，$Y_1,\cdots, Y_{n_2}$是来自$Y$的样本，$\overline{X}$和$\overline{Y}$分别是这两个样本的样本均值，$S_1^2$和$S_2^2$分别是$X,Y$的修正样本方差：$S_1^2=\frac{1}{n_1-1}\sum_{i=1}^{n_1}(X_i-\overline{X})^2~~S_2^2=\frac{1}{n_2-1}\sum_{i=1}^{n_2}(Y_i-\overline{Y})^2$,则有
+
+1. $\frac{S_1^2/S_2^2}{\sigma_1^2/\sigma_2^2}\sim F(n_1-1, n_2 - 1)$
+2. $U = \frac{(\overline{X}-\overline{Y})-(\mu_1 - \mu_2)}{\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}}\sim N(0,1)$
+3. 若$\sigma_1^2 = \sigma_2^2 = \sigma^2$, 则$\frac{(\overline{X}-\overline{Y})-(\mu_1 - \mu_2)}{S_w\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}\sim t(n_1+n_2-2)$,其中$S_w^2=\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1 + n_2 - 2}, S_w = \sqrt{S_w^2}$.
+
+***
+
+## Ch7 参数估计
+
+方法分类：点估计(矩估计、极大似然估计)、区间估计
+
+**点估计：**对总体分布中的未知参数$\theta$, 以样本$X_1, X_2,\cdots,X_n$构造统计量$\hat{θ}(X_1,X_2,\cdots,Xn)$作为参数$\theta$的估计, 称$\hat{θ}(X_1,X_2,\cdots,X_n)$为参数$\theta$**估计量**。当测得样本值$(x_1 , x_2 ,\cdots, x_n)$时, 代入$\hat{\theta}$即可得到参数$\theta$**估计值**：$\hat{θ}(X_1,X_2,\cdots,Xn)$.
+
+**区间估计：**对总体分布中的未知参数$\theta$, 以样本$X_1, X_2,\cdots,X_n$构造 2个统计量$\hat{θ}_1(X_1,X_2,\cdots,X_n)$和$\hat{θ}_2(X_1,X_2,\cdots,X_n)$以区间$(\hat{\theta}_1, \hat{\theta}_2)$作为参数$\theta$的估计。对 给定的概率$1-\alpha$，满足：
+$$
+P(\hat{θ}_1(X_1,X_2,\cdots,X_n) < \theta < \hat{θ}_2(X_1,X_2,\cdots,X_n))=1-\alpha
+$$
+
+### 1 矩估计
+
+**原则：**以样本矩作为总体矩的估从而得到参数的估计量.
+
+**矩估计法：**设总体$X$的**分布类型已知**，$X$的分布函数为$F(x;\theta_1,\theta_2,\cdots,\theta_k)$，其中$\theta_1,\theta_2,\cdots,\theta_k$为未知参数。设$X_1,X_2,\cdots,X_n$为来自总体$X$的样本。若$m$阶总体矩$EX^m=\mu_m(\theta_1,\theta_2,\cdots,\theta_k)$存在，$(m=1,2,\cdots,k)$，则有$m$阶样本矩$A_m = \frac{1}{n}\sum_{i=1}^nX_i^m~(m=1,2,\cdots, k)$。令
+$$
+\left\{\begin{matrix}\mu_1(\theta_1,\theta_2,\cdots,\theta_k)=A_1\\\cdots\\ \mu_k(\theta_1,\theta_2,\cdots, \theta_k)=A_k  \end{matrix}\right.
+$$
+这时包含$k$个未知参数$\theta_1,\cdots,\theta_k$的方程组，从中解出方程组的解$\hat{\theta_1},\cdots,\hat{\theta_k}$。
+用$\hat{\theta_1},\cdots,\hat{\theta_k}$作为$\theta_1,\cdots,\theta_k$的估计量，就是**矩估计法**，这种估计量称为**矩估计量**，观察值称为**矩估计值**。
+（无论总体$X$服从何种分布，总体均值$EX=\mu$, 总体方差$DX=\sigma^2$作为未知参数， 其矩估计量一定是样本均值和样本方差）
+
+相关系数的矩估计：
+$$
+\rho_{XY}=\frac{cov(X,Y)}{\sqrt{D(X)D(Y)}}=\frac{E([X-E(X)][Y-E(Y)])}{\sqrt{(E([X-E(X)]^2)E([Y-E(Y)]^2))}}\\
+r=\frac{\frac{1}{n}\sum_{i=1}^n(x_i - \overline{x})(y_i - \overline{y})}{\sqrt{\frac{1}{n}\sum_{i=1}^n(x_i-\overline{x})^2 \cdot \frac{1}{n}\sum_{i=1}^n(y_i - \overline{y})^2}}
+$$
+定义**样本相关系数**：
+$$
+\hat{\rho}=\frac{\frac{1}{n}\sum_{i=1}^n X_iY_i-\overline{X}\cdot \overline{Y}}{\sqrt{ [\frac{1}{n}\sum_{i=1}^n X_i^2 - \overline{X}^2][\frac{1}{n}\sum_{i=1}^n Y_i^2 - \overline{Y}^2] }}=\frac{S_{XY}}{S_{nX}S_{nY}}
+$$
+
+### 2 极大似然估计
+
+**原则：**以样本$X_1,X_2,\cdots,X_n$的观测值$x_1,\cdots, x_n$来估计参数$\theta_1,\theta_2,\cdots, \theta_k$，若选取$\hat\theta_1,\hat\theta_2,\cdots, \hat\theta_k$使观测值出现的概率最大，把$\hat\theta_1,\hat\theta_2,\cdots, \hat\theta_k$作为参数$\theta_1,\theta_2,\cdots, \theta_k$的估计量.
+
+**离散型极大似然估计：**总体$X$为离散型，其分布律$P\{X=x\}=p(x,\theta)$的形式为已知，$\theta$为待估参数。又设$x_1,\cdots,x_n$为$X_1,\cdots, X_n$的一个样本值；样本$X_1,\cdots, X_n$取$x_1,\cdots,x_n$的概率，即事件$\{X_1=x_1,\cdots,X_n=x_n\}$的概率为：$P\{X_1=x_1,\cdots,X_n=x_n\}=\prod_{i=1}^np(x_i,\theta)$，记为$L(\theta)=L(x_1,\cdots,x_n;\theta)=\prod_{i=1}^np(x_i,\theta)$，$L(\theta)$称为样本的**似然函数**。
+由极大似然估计法，选择使$L(x_1,\cdots,x_n;\theta)$最大的参数$\hat\theta$作为$\theta$的估计值，即取$\hat\theta$使得：
+$$
+L(x_1,\cdots,x_n;\hat\theta)=\max_\theta L(x_1,\cdots,x_n;\theta)
+$$
+$\hat\theta$与$x_1,\cdots,x_n$有关，记为$\hat\theta(x_1,\cdots,x_n)$; 称其为参数$\theta$的**极大似然估计值**，$\hat\theta(X_1,\cdots,X_n)$称为$\theta$的**极大似然估计量**。
+
+**连续型极大似然估计：**设概率密度$p(x,\theta)$，$x_1,\cdots,x_n$是$X_1,\cdots,X_n$的样本观测值，$X_1,\cdots,X_n$落在$x_1,\cdots,x_n$邻域(边长为$dx_1,\cdots,dx_n$的n维立方体)内的概率近似为$\prod_{i=1}^np(x_i,\theta)dx_i$。取$\theta=\hat\theta$，使上述概率达到最大值。由于$dx_i$不随$\theta$改变，故只考虑$L(\theta)=L(x_1,\cdots,x_n;\theta)=\prod_{i=1}^np(x_i,\theta)$的最大值，这个函数称为样本的**似然函数**。若：
+$$
+L(x_1,\cdots,x_n;\hat\theta)=\max_\theta L(x_1,\cdots,x_n;\theta)
+$$
+则称$\hat\theta(x_1,\cdots,x_n)$为$\theta$的极大似然估计值，称$\hat\theta(X_1,\cdots,X_n)$为$\theta$的极大似然估计量。
+
+**求解方法：**令$\frac{dL(\theta)}{d\theta}=0$，求得$\theta$。由于$L(\theta)$是乘积形式，求导后复杂，且$L(\theta)$与$\ln L(\theta)$极值点相同，因此$\theta$的极大似然估计可从下述方程解得：
+$$
+\frac{d}{d\theta}\ln L(\theta)=0
+$$
+若总体分布中包含多个参数$\theta_1,\cdots,\theta_k$，则分别求到得到似然方程组或对数似然方程组。
+
+**极大似然估计的不变性：**设$\hat\theta$是$\theta$的极大似然估计, $u=u(\theta)$是$\theta$的函数, 且有单值反函数$\theta=\theta(u)$，则$\hat{u} = u(\hat{\theta})$是$u(\theta)$的极大似然估计。
 
 
 

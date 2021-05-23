@@ -446,7 +446,7 @@ $$
 2. $\forall x\notin L, Prob(A(x)=0)=1$
 
 **2.3 Two-Sided Error Monte Carlo算法**
-**定义：**令$F$为问题，称随机算法$A$为two-sided-error Monte Carlo Algorithm computing $F$ if $\exists \epsilon, 0<\epsilon <\frac{1}{2}$，使得对于\$F$的每一个输入$x$
+**定义：**令$F$为问题，称随机算法$A$为two-sided-error Monte Carlo Algorithm computing $F$ if $\exists \epsilon, 0<\epsilon <\frac{1}{2}$，使得对于$F$的每一个输入$x$
 $$
 Prob(A(x)=F(x))\geq \frac{1}{2}+\epsilon
 $$
