@@ -243,5 +243,84 @@ $$
 
 **极大似然估计的不变性：**设$\hat\theta$是$\theta$的极大似然估计, $u=u(\theta)$是$\theta$的函数, 且有单值反函数$\theta=\theta(u)$，则$\hat{u} = u(\hat{\theta})$是$u(\theta)$的极大似然估计。
 
+### 3 估计量的评选标准
 
+标准：无偏性，有效性，一致性
+
+**3.1 无偏性**
+**定义：**$X_1,X_2,\cdots,X_n$为总体$X$的一个样本，设$\theta$的估计量$\hat\theta=\theta(X_1,X_2,\cdots,X_n)$. 若$E(\hat\theta)=\theta$，则称$\hat\theta$是$\theta$的无偏估计量.
+
+$k$阶样本矩$A_k$是$k$阶总体矩$\mu_k$的无偏估计。特别地，样本均值$\overline{X}$是总体均值$\mu_1 =E( X )$的无偏估计量，样本二阶矩$A_2=\frac{1}{n}\sum_{i=1}^nX_i^2$是总体二阶矩$\mu_2=E(X^2)$的无偏估计量（样本方差$S_{n}^2$**不是**总体方差$\sigma^2$的无偏估计，但修正的样本方差$S_{n-1}^2$是）.
+
+**3.2 有效性**
+**定义：**设$\hat \theta_1=\hat\theta_1(X_1,\cdots,X_n)$和$\hat\theta_2 = \hat\theta_2(X_1,\cdots,X_n)$都是参数的无偏估计量，若对任意$n$，$D(\hat\theta_1)\leq D(\hat\theta_2)$，则称$\hat\theta_1$较$\hat\theta_2$有效。
+
+**3.3 一致性**
+**定义：**设$\hat\theta_n=\hat\theta_n(X_1,X_2,\cdots,X_n)$是总体参数$\theta$的估计量，若当$n\rightarrow \infty$时，$\hat\theta_n$依概率收敛于$\theta$，即$\forall \varepsilon > 0$，有$\lim_{n\rightarrow \infty}P(|\hat\theta_n-\theta|<\varepsilon)=1$，则称$\hat\theta_n$是总体参数$\theta$的**一致估计量**.
+
+常用结论：
+
+1. 样本$k$阶矩是总体$k$阶矩的一致估计量.
+2. 设$\hat\theta_n$是$\theta$的无偏估计量，且$\lim_{n\rightarrow \infty}D(\hat\theta_n)=0$，则$\hat\theta_n$是$\theta$的一致估计量.
+
+### 4 区间估计
+
+**区间估计：**根据样本给出未知参数的 一个范围，并保证真参数以指定的较大概率属于这个范围.
+
+**4.1 单正态总体情形**
+设$X_1,\cdots,X_n$为总体$X\sim N(\mu,\sigma^2)$的一个样本。求$\mu$或$\sigma^2$的区间估计$[\hat\theta_1,\hat\theta_2]$.
+
+**置信区间与置信度：**设总体$X$含未知参数$\theta$，对于样本$X_1,\cdots,X_n$，找出统计量$\hat\theta_i=\theta_i(X_1,\cdots,X_n)~(i=1,2),\hat\theta_1<\hat\theta_2$，使得$P\{\hat\theta_1\leq \theta\leq \hat\theta\}=1-\alpha, (0<\alpha<1)$。称区间$[\hat\theta_1,\hat\theta_2]$为$\theta$的**置信区间**，$1-\alpha$为该区间的**置信度**。
+
+1. 置信区间长度$L$反映了估计精度，$L$越小, 估计精度越高.
+2. $\alpha$反映了估计的可靠度，$\alpha$越小，$1-\alpha$越大，估计的可靠度越高，但这时，$L$ 往往增大，因而估计精度降低.
+3. $\alpha$确定后，置信区间的选取方法不唯一，常选长度最小的一个
+
+**正态总体，求均值$\mu$区间估计**
+设$X_1,\cdots,X_n$为总体 的一个样本。$X\sim N(\mu,\sigma^2)$在置信度$1-\alpha$下，来确定$\mu$的置信区间$[\theta_1,\theta_2]$ 。
+**(1) 已知方差，估计均值**
+已知方差$\sigma^2=\sigma^2_0$，则$U=\frac{\overline{X}-\mu}{\sigma_0/\sqrt{n}}\sim N(0,1)$。对于给定的置信度，找出临界值$\lambda_1,\lambda_2$使$P\{\lambda_1\leq U\leq \lambda_2\}=1-\alpha$。取对称区间$L$最小，因而$\lambda=u_{\alpha/2}$，$\Phi(u_{\alpha/2})=1-\alpha/2$。可解出$\mu$置信区间:
+$$
+[\overline{X}-u_{\alpha/2}\cdot \frac{\sigma_0}{\sqrt{n}}, \overline{X} + u_{\alpha/2}\cdot \frac{\sigma_0}{\sqrt{n}}]
+$$
+**(2) 未知方差，估计均值**
+
+用$S_n^2=\frac{1}{n}\sum_{i=1}^n(X_i - \overline{X})^2$代替$\sigma^1$，或$T=\frac{\overline{X}-\mu}{S_{n-1}/\sqrt{n}}\sim t(n-1)$. 对于给定的$1-\alpha$，选取对称区间使$P\{|T|\leq \lambda\}=1-\alpha$。解得$\mu$区间：
+$$
+[\overline{X}-t_{\alpha/2}(n-1)\cdot\frac{S_n}{\sqrt{n-1}}, \overline{X}+t_{\alpha/2}(n-1)\cdot \frac{S_n}{\sqrt{n-1}}]
+$$
+**正态总体，求方差$\sigma^2$的区间估计**
+取样本函数$\chi^2 = \frac{nS_{n}^2}{\sigma^2}\sim \chi^2(n-1)$. $P\{\lambda_1\leq \chi^2 \leq \lambda_2\}=1-\alpha$。由于$\chi^2$分布不对称，可采用使概率对称的区间$P\{\chi^2<\lambda_1\} = P\{\chi^2 > \lambda_2\}=\alpha/2$. 解得$\sigma^2$的置信区间：
+$$
+[\frac{nS_n^2}{\chi^2_{\alpha/2}(n-1)}, \frac{nS_n^2}{\chi^2_{1-\alpha/2}(n-1)}]
+$$
+**4.2 双正态总体情形**
+$(X_1,\cdots,X_{n-1})$为总体$X\sim N(\mu_1,\sigma_1^2)$的样本，$(Y_1,\cdots,Y_{n_2})$为总体$Y\sim N(\mu_2,\sigma^2_2)$的样本，$\overline{X},S_1^2,\overline{Y},S_2^2$分别表示$X,Y$的样本均值与修正样本方差。设$X,Y$独立，置信度为$1-\alpha$. 求$\mu_1-\mu_2,\sigma_1^2/\sigma_2^2$的区间估计.
+
+**(1) $\sigma_1^2,\sigma_2^2$已知，求$\mu_1-\mu_2$的置信区间**
+利用$\frac{(\overline{X}-\overline{Y})-(\mu_1-\mu_2)}{\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}}\sim N(0,1)$，解得置信区间
+$$
+\left( (\overline{X}-\overline{Y}) - u_{\alpha/2}\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}, (\overline{X}-\overline{Y}) + u_{\alpha/2}\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}} \right)
+$$
+**(2) 方差比$\sigma_1^2/\sigma_2^2$的置信区间**
+利用$F=\frac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2}\sim F(n_1-1,n_2-1)$，解得置信区间
+$$
+\left( \frac{S_1^2}{S_2^2}\frac{1}{F_{\alpha/2}(n_1-1,n_2-1)}, \frac{S_1^2}{S_2^2}\frac{1}{F_{1-\alpha/2}(n_1-1,n_2-1)} \right)
+$$
+**4.3 单侧置信区间**
+对于$0<\alpha<1$，样本$X_1,\cdots,X_n$，确定统计量$\hat\theta_1(X_1,\cdots,X_n)$，使$P(\theta>\hat\theta_1)=1-\alpha$，则称$(\hat\theta_1,+\infty)$是$\theta$的置信度$1-\alpha$的单侧置信区间。$\hat\theta_1$称为**单侧置信下限**。同理根据$P(\theta<\hat\theta_2)=1-\alpha$可定义**单侧置信上限**。
+
+**4.4 非正态总体均值的区间估计**
+当总体分布非正态时，一般很难求出统计量的具体分布。此时采用大样本发。在样本量较大时，利用极限定理求出枢轴变量的近似分布，然后求得参数的区间估计。例如，对样本$X_1,\cdots,X_n$求$\mu$置信度为$1-\alpha$的区间估计，则$n$充分大时，根据中心极限定理有
+$$
+\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\rightarrow N(0,1)
+$$
+若$\sigma$未知，可用样本标准差$S_{n-1}$无偏代替，得
+$$
+U=\frac{\overline{X}-\mu}{S_{n-1}/\sqrt{n}}\sim N(0,1)
+$$
+可解得$\mu$的置信区间为
+$$
+(\overline{X}-u_{\alpha/2}\frac{S_{n-1}}{\sqrt{n}}, \overline{X}+u_{\alpha/2}\frac{S_{n-1}}{\sqrt{n}})
+$$
 

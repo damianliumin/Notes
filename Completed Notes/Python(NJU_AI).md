@@ -980,7 +980,7 @@ aSer.values # 返回value
 **Series的基本运算：**
 基本运算：对value进行运算
 aSer[1:2] # 基于位置切片
-aSer['a':'b] # 基于索引切片
+aSer['a':'b'] # 基于索引切片
 
 #### 3.2 DataFrame
 
@@ -1052,7 +1052,7 @@ aDF.iat[a, b] # 索引
 **e. 条件筛选**
 aDF[condition]
 ex: aDF[(df.index >= 'b') & (df.index <= 'd' & (df.maths >= 90))]
-ex: aDF[df.name.str.contains('Black')]
+ex: aDF[aDF.name.str.contains('Black')]
 
 #### 3.3 基于Series和DataFrame的数据统计和分析
 

@@ -468,6 +468,92 @@ $$
 
 ***
 
+## 4-12 启发式算法 Heuristics
+
+### 1 模拟退火算法
+
++ the set of system states - the set of feasible solutions
++ the energy of a state - the cost of a feasible solution
++ perturbation mechanism - a random choice from the neighborhood
++ an optimal state - an optimal feasible solution
++ tenperature - a control parameter
+
+**Simulated Annealing for $U$ with respect to Neigh**
+**SA(Neigh)**
+
++ Input: An input instance $x\in L_I$
++ Step 1: Compute or select (randomly) an initial feasible solution $\alpha \in \mathcal{M}(x)$.
+  Select an initial temperature (control parameter) T.
+  Select a temperature reduction function $f$ as a function of two parameters $T$ and time.
++ Step 2: $I:=0$;
+  **While** $T>0$ (or $T$ is not too close to 0) **do**
+          **begin** randomly select a $\beta \in Neigh_x(\alpha)$;
+                  **if** $cost(\beta) \leq cost(\alpha)$ then $\alpha:=\beta$
+                  **else begin** 
+                          generate a random number $r$ uniformly in the range $(0,1)$;
+                          **if** $r < e^{-\frac{cost(\beta)-cost(\alpha)}{T}}$
+                          **then** $\alpha := \beta$
+                   **end**
+                   $I:=I+1$
+                   $T:=f(T,I)$
+          **end**
++ Step 3: **output**($\alpha$)
+
+**1.1 初始温度选取**
+方法一：选择一个足够大的$T$(例如两个相邻解代价的最大差值)
+方法二：随机选择$T$，增大$T$直到几乎总是选取某个相邻解$\beta$
+
+**1.2 温度下降函数的选取**
+$T:=r\cdot T~~(0.8\leq r \leq 0.99)$和$T_k:=\frac{T}{\log_2(k+2)}$很常用
+
+**1.3 终止条件**
+方法一：$\alpha$一段时间内不再改变
+方法二：$term\leq \frac{\epsilon}{(\ln[\mathcal{M(x)}]-1)/p}$
+
+**1.4 实践经验：**
+
++ 模拟退火算法可通过巨大的计算代价换取高质量的可行解
++ 输出的质量未必与初始点相关
++ 模拟退火最重要的参数是温度下降函数的下降率和对相邻解的选择
++ 平均复杂度接近最坏情况复杂度
++ 在相邻解的选取相同的情况下，模拟退火的效果远好于local search和multi-start local search
+
+### 2 遗传算法
+
++ an individual - a feasible solution
++ a gene - an item of the solution representation
++ fitness value - cost function
++ population - a subset of the set of feasible solutions
++ mmutation - a random local transformation
+
+**Genetic Algorithm Scheme (GAS)**
+
++ Input: An instance $x$ of an optimization problem $U=(\Sigma_I, \Sigma_O, L, L_I, \mathcal{M}, cost, goal)$
++ Step 1: Create (possibly randomly) an initial population $P=\{\alpha_1,\cdots,\alpha_k\}$  of size $k$
+  $t:=0$ (the number of created populations)
++ Step 2: Compute $fitness(\alpha_i)$ for $i=1,\cdots,k$ (may be  $cost(\alpha_i)$)
+  Use $fitness(\alpha_i)$ to estimate a probability distribution $Prob_P$ on $P$ in such a way that feasible solutions with high fitnesses get assigned higer probabiliries.
++ Step 3: Use $Prob_P$ to randomly choose $k/2$ pairs of feasible solutions $(\beta_1^1, \beta_1^2),\cdots,(\beta_{k/2}^1, \beta_{k/2}^2)$. Use the crossover operation on every pair of parents $(\beta_i^1, \beta_i^2)$ for $i=1,\cdots,k/2$ to create new individuals, and put them into $P$.
++ Step 4: Apply randomly the mutation operation to each individual of $P$
++ Step 5: Compute the fitness $fitness(\gamma)$ of all individuals $\gamma$ in $P$ and use it to choose $P'\subseteq P$ of cardinality $k$.
+  Possibly improve every individual of $P'$ by local search with respect to a neighborhood.
++ Step 6: $t:=t+1$
+  $P:=P'$
+  **if** the stop criterion is not fulfilled **goto** Step 2
+  **else** give the best individuals of $P$ as the output
+
+**Adjustment of Free Parameters**
+
++ population size
++ selection of the initial population
++ fitness estimation and selection mechanism for parents
++ representation of individuals and the crossover operation
++ probability of mutation
++ selection mechanism for a new population
++ stop criterion
+
+***
+
 ## 4-14 串匹配 String Matching
 
 串匹配String Matching是在$T[1\cdots n]$中寻找模式$P(1\cdots m),m\leq n$，$P,T$中的字符从一个有限字符表$\Sigma$中选取。若$P[1..m]=T[s+1..s+m]$，称$s$是一个合法的shift. 串匹配问题的目标是寻找到所有的合法shift。
