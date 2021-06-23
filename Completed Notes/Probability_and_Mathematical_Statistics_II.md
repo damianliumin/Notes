@@ -324,3 +324,13 @@ $$
 (\overline{X}-u_{\alpha/2}\frac{S_{n-1}}{\sqrt{n}}, \overline{X}+u_{\alpha/2}\frac{S_{n-1}}{\sqrt{n}})
 $$
 
+***
+
+## Ch8 假设检验
+
+
+
+
+
+
+

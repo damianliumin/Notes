@@ -25,7 +25,7 @@ void union_set{
 }
 
 void kruskal(){
-    sort(edges， edges+m, cmp);
+    sort(edges， edges + m, cmp);
     int ans = 0, t = 0;
     for(int i = 1 ;i <= n-1; ++i){
         while(find_set(edges[t].from) == find_set(edges[t].to))
@@ -497,14 +497,14 @@ inline ll qmult(ll a, ll b, ll q){
 
 ```c++
 // 尾递归实现
-int euclid(int a, int b){
+int gcd(int a, int b){
     if(b == 0)
         return a;
     else
         return euclid(b, a % b);
 }
 // 循环实现
-int euclid(int a, int b){
+int gcd(int a, int b){
     while(b != 0){
         int tmp = a;
         a = b;
@@ -514,18 +514,20 @@ int euclid(int a, int b){
 }
 ```
 
-#### 2-2拓展欧几里得算法
+#### 2-2 拓展欧几里得算法
 
 返回最大公因数的同时，得到$ax+by=1$的两个整数$x,y$.
 
 ```c++
-ll ext_euclid(ll a, ll b, ll &x, ll &y){  // ax + by = 1
+ll exgcd(ll a, ll b, ll &x, ll &y){  // ax + by = 1
     if(b == 0){
         x = 1, y = 0;
         return a;
     }
-    ll d = ext_euclid(b, a % b, y, x);
-    y -= a / b * x;
+    ll d = ext_euclid(b, a % b, x, y);
+    ll tmp = x;
+    x = y;
+    y = tmp - a / b * y;
     return d;
 }
 ```
@@ -646,7 +648,7 @@ int mod_eq_solve(int a, int b, int n){
 ll inverse(ll a, ll b){ // use ax + by = 1
     ll x, y;
     ext_euclid(a, b, x, y);
-	return x;
+	return (x + b) % b;
 }
 
 ll inverse(ll a, ll q){  // use Fermat Th, q must be a prime!
@@ -662,12 +664,30 @@ ll inverse(ll a, ll q){  // use Fermat Th, q must be a prime!
 ```c++
 ll crt(int n, ll a[], ll m[], ll p){
     ll w, x, r = 0;
-    for(int i = 1 ;i <= n ;++i){
+    for(int i = 0 ;i < n ;++i){
         w = p / m[i];
         x = inverse(w, m[i]);
         r = (r + qmult(qmult(a[i], w, p), x, p)) % p;
     }
     return (r + p) % p;
+}
+```
+
+#### 5-5 扩展中国剩余定理
+
+```c++
+// m1 ... mn非互质情形
+ll excrt(int n, ll a[], ll r[]) {
+    ll ans = r[0], tot = a[0];
+    for (int i = 1; i < n; ++i) {
+        ll x, y;
+        ll d = exgcd(tot, a[i], x, y);
+        x = x * ((r[i] - ans % a[i] + a[i]) % a[i]) / d % (a[i] / d);
+        ans += tot * x ;
+        tot *= a[i] / d;
+        ans = (ans % tot + tot) % tot;
+    }
+    return ans;
 }
 ```
 
@@ -719,8 +739,6 @@ ll lucas(ll n, ll m, ll q){
 
 ***
 
-
-
 ## Ch3 其他算法
 
 ### 1 二分法
@@ -729,14 +747,14 @@ ll lucas(ll n, ll m, ll q){
 
 ```c++
 int ans = 0, l, r;
-// some input
+// some input, find minimum
 while(l <= r){
     int m = (l + r) / 2;
     if(check(m)){
         ans = m;
-        l = l + 1;
+        l = m + 1;
     } else {
-        r = r - 1;
+        r = m - 1;
     }
 }
 ```
@@ -890,5 +908,39 @@ void union_set(node* x, node* y){
 
 ### 5 串匹配
 
+#### 5-1 KMP算法
 
+```c++
+int s[MAXN]; // string length n
+int t[MAXN]; // string length m
+int p[MAXN]; // prefix
+
+void prefix(){
+    p[1] = 0;
+    int k = 0;
+    for(int i = 2 ;i <= m ;++i){
+        while(k > 0 && t[k+1] != t[i])
+            k = p[k];
+        if(t[k+1] == t[i])
+            k ++;
+        p[i] = k;
+    }
+}
+
+void kmp(){
+   	prefix();
+    int k = 0;
+    for(int i = 1 ;i <= n ;++i){
+        while(k > 0 && t[k+1] != s[i])
+            k = p[k];
+        if(t[k+1] == s[i])
+            k ++;
+        if(k == m){
+     		cout << "find one" << endl;       
+            k = p[k];
+        }
+    }
+}
+
+```
 
