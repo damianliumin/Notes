@@ -48,7 +48,7 @@ void prim(){
     // initialize
     vis[1] = true;
     for(int i = 1 ;i <= n ;++i)
-        low[MAXN] = INF;
+        low[i] = INF;
     low[1] = 0;
     for(auto &x: edge[1])
         low[x.first] = x.second;
@@ -82,8 +82,9 @@ void bfs(int s){
     q.push(s);		// priority_queue in some cases
     father[s] = s;
     dis[s] = 0;
-    while(q.size() != 0){
-     	int u = q.pop();
+    while(!q.empty()){
+     	int u = q.front();
+        q.pop();
         for(auto &v: connect[u])
             if(!vis[v]){
                 vis[v] = 1;
@@ -144,21 +145,22 @@ int dfn[MAXN] = {0};
 int low[MAXN] = {0};
 int belong[MAXN] = {0};
 bool instack[MAXN] = {0};
+vector<int> edges[MAXN];
 stack<int> s;
+
 void dfs(int pos [,int pre]) {   // 仅在无向图需要pre
-    instack[pos] = true;  // instack判断当前点是否在栈内
-    s.emplace(pos);  // push into stack
+    instack[pos] = true;
+    s.emplace(pos);
     low[pos] = dfn[pos] = ++ts;
     for (auto &nex : edges[pos]) {
         if (dfn[nex] == 0) {  // not visited yet
             dfs(nex [, pos]);
             low[pos] = min(low[pos], low[nex]);
-        } else
-            if (instack[nex] [&& nex != pre]) //无向图需要后条件
-                low[pos] = min(low[pos], dfn[nex]);
+        } else if (instack[nex] [&& nex != pre])
+            low[pos] = min(low[pos], dfn[nex]);
     }
-    if (low[pos] == dfn[pos] && instack[pos]) { // find new
-        ++cnt;    // total num of strong connected components
+    if (low[pos] == dfn[pos] && instack[pos]) {
+        ++cnt;    // total strong connected components
         while (!s.empty() && s.top() != pos) {
             belong[s.top()] = cnt;
             instack[s.top()] = false;
@@ -189,25 +191,29 @@ STRONGLY-CONNECTED-COMPONENTS{
 
 Bellman-Ford算法可以检验出负权回路。
 
-```pseudocode
+```c++
 // O(VE)
-Bellman-Ford(G, s){
-	// initialization
-	for each vertex v{
-		distance[v] = (v == s) ? 0 : +infinity
-		predecessor[v] = NULL
-	}
-	// relaxation
-	for i from 1 to |V|-1
-		for each edge (u, v)
-			if distance[u] + weight(u,v) < distance[v]{
-				distance[v] = distance[u] + weight(u,v)
-				predecessor[v] = u
-			}
-	// check negative cycle
-	for each edge(u,v)
-		if distance[u] + weight(u,v) < distance[v]
-			error "negative cycle"
+int dis[MAXN] = {0};
+struct edge{
+	int from, to, w;
+} edges[MAXN];
+int n, m;
+
+bool bellman_ford(int s){
+    for(int i = 1 ;i <= n ;++i)
+        dis[i] = INF;
+    dis[s] = 0;
+    for(int i = 1 ;i <= n ;++i)
+        for(int j = 1 ;j <= m ;++j) {
+            int u = edges[j].from, v = edges[j].to;
+            dis[v] = min(dis[v], dis[u] + edges[j].w);
+        }
+    for(int j = 1 ;j <= m ;++j){
+        int u = edges[j].from, v = edges[j].to;
+        if(dis[u] + edges[j].w < dis[v])
+            return false;
+    }
+    return true;
 }
 ```
 
@@ -243,9 +249,8 @@ void dijkstra(G, s){ // can add predecessor if necessary
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
 	pq.emplace(0, s);
 	while(!pq.empty()){
-		pair<int, int> cur = pq.top();
+		int u = pq.top().second;
 		pq.pop();
-		int u = cur.second;
 		if(vis[u]) continue;
 		vis[u] = true;
 		for(auto &x: edges[u]){
@@ -302,7 +307,7 @@ bool find(int x){
     for(auto& y : edges[x]){
         if(!used[y]){
             used[y] = true;
-            if(belong[y]==0 || find(belong[y])){ //belong[y]!
+            if(belong[y]==0 || find(belong[y])){ 
                 belong[y] = x;
                 return true;
             }
@@ -314,7 +319,7 @@ bool find(int x){
 int hungarian(){
     int total = 0;
     for(int i = 1 ;i <= n ;++i){
-        memset(used, 0, sizeof(used));//clear used every time
+        memset(used, 0, sizeof(used)); // clear used every time
         if(find(i))
             ++total;
     }
@@ -487,7 +492,7 @@ ll qmult(ll a, ll b, ll q){
 
 // the following method depends on platform
 inline ll qmult(ll a, ll b, ll q){
-    return (__int128)a * (__int128)b / q;
+    return (__int128)a * (__int128)b % q;
 }
 ```
 
@@ -516,15 +521,15 @@ int gcd(int a, int b){
 
 #### 2-2 拓展欧几里得算法
 
-返回最大公因数的同时，得到$ax+by=1$的两个整数$x,y$.
+返回最大公因数的同时，得到$ax+by=d$的两个整数$x,y$.
 
 ```c++
-ll exgcd(ll a, ll b, ll &x, ll &y){  // ax + by = 1
+ll exgcd(ll a, ll b, ll &x, ll &y){  // ax + by = d
     if(b == 0){
         x = 1, y = 0;
         return a;
     }
-    ll d = ext_euclid(b, a % b, x, y);
+    ll d = exgcd(b, a % b, x, y);
     ll tmp = x;
     x = y;
     y = tmp - a / b * y;
@@ -561,10 +566,9 @@ void Euler() {
 # define ll long long
 
 bool miller_rabin(ll x){
-    if(x < 3)
-        return x == 2;
-    if(x % 2 == 0)
-        return false;
+    if(x < 3) return x == 2;
+    if(x % 2 == 0) return false;
+    // miller rabin
     ll A[] = {2, 325, 9375, 28178, 
               450775, 9780504, 1795265022};
     ll d = x - 1, r = 0;
@@ -592,46 +596,15 @@ bool miller_rabin(ll x){
 
 ### 5 模运算系统
 
-#### 5-1 BSGS算法
-
-BSGS(baby step & giant step): 求解$a^x\equiv b\mod p$时，取一个整数$t$将方程转化为$a^{At-B}\equiv b\mod p$，则原方程变为$a^{At}\equiv a^Bb\mod p$。暴力枚举列出全部$a^x$，而BSGS仅列出$a^{At}$和$a^Bp$。取$t=\lceil \sqrt{p} \rceil$，$a^Bb$可能取值为$b,ab,a^2b,\cdots,a^{t-1}b (\mod p)$, $a^{At}$可能取值为$a^{t},a^{2t},a^{3t},\cdots,a^{t^2}$。A从小取，B从大取，可得到最小的$x=At-B$
-
-```c++
-#define ll long long
-ll a, b, p, at; // at is a^t
-map<ll, ll> saveB;  // save (a^Bb, B)
-
-void listB(){
-    ll tmp = b;
-    at = 1;
-    for(int i = 0 ;i < t ;++i){
-        saveb[tmp] = i;
-        tmp = tmp * a % q;
-        at = at * a % q;
-    }
-}
-
-ll bsgs(){
-    listB();
-    ll tmp = at;
-    for(int i = 1 ;i <= t ;++i){
-        auto it = saveB.find(tmp);
-        if(it != saveB.end())
-            return i * t - it->second; // minimal x
-        tmp = tmp * at % q;
-    }
-    return -1;  // no solution
-}
-```
-
-#### 5-2 线性模方程算法
+#### 5-1 线性模方程算法
 
 求解$ax\equiv b (\mod n)$.
 
 ```c++
-int mod_eq_solve(int a, int b, int n){
+int solve(int a, int b, int n){
     int x, y, d;
-	d = ext_euclid(a, b, x, y);
+	d = exgcd(a, n, x, y);
+    x = (x + b) % b;
 	if(b % d == 0){
 		int x0 = (x * (b / d)) % n;  // find first solution
 		for(int i = 0 ;i < d ;++i)
@@ -642,52 +615,91 @@ int mod_eq_solve(int a, int b, int n){
 }
 ```
 
-#### 5-3 乘法逆元
+#### 5-2 乘法逆元
 
 ```c++
-ll inverse(ll a, ll b){ // use ax + by = 1
+ll inv(ll a, ll b){ // use ax + by = 1
     ll x, y;
-    ext_euclid(a, b, x, y);
+    ll d = exgcd(a, b, x, y);
+    assert(d == 1);
 	return (x + b) % b;
 }
 
-ll inverse(ll a, ll q){  // use Fermat Th, q must be a prime!
+ll inv(ll a, ll q){  // Fermat Th, q must be a prime!
     return qpow(a, q-2, q);
 }
 ```
 
-#### 5-4 中国剩余定理
+#### 5-3 中国剩余定理
 
 输入变量n为$m=m_1\cdots m_n$中$m_i$个数，a[]为$a\mod m_i$，m[]存放$m_i$，$p=m$。
 输出变量$a\leftarrow(a_1,a_2\cdots a_n)$
 
 ```c++
-ll crt(int n, ll a[], ll m[], ll p){
+ll crt(int n, ll a[], ll m[]){
     ll w, x, r = 0;
+    ll p = 1;
+    for(int i = 0 ;i < n ;++i)
+    	p *= m[i];
     for(int i = 0 ;i < n ;++i){
         w = p / m[i];
-        x = inverse(w, m[i]);
+        x = inv(w, m[i]);
         r = (r + qmult(qmult(a[i], w, p), x, p)) % p;
     }
     return (r + p) % p;
 }
 ```
 
-#### 5-5 扩展中国剩余定理
+#### 5-4 扩展中国剩余定理
 
 ```c++
-// m1 ... mn非互质情形
-ll excrt(int n, ll a[], ll r[]) {
-    ll ans = r[0], tot = a[0];
-    for (int i = 1; i < n; ++i) {
+// m1 ... mn not pairwise coprime
+
+ll excrt(int n, ll a[], ll m[]){
+    ll a1 = a[0], m1 = m[0];
+    for(int i = 1 ;i < n ;++i){
+        ll a2 = a[i], m2 = m[i];
         ll x, y;
-        ll d = exgcd(tot, a[i], x, y);
-        x = x * ((r[i] - ans % a[i] + a[i]) % a[i]) / d % (a[i] / d);
-        ans += tot * x ;
-        tot *= a[i] / d;
-        ans = (ans % tot + tot) % tot;
+        ll d = exgcd(m1, m2, x, y);
+        x = x * ((a2 - a1 % m2 + m2) % m2) / d % (m2 / d);
+        a1 += m1 * x;
+        m1 *= m2 / d;
+        a1 = (a1 % m1 + m1) % m1;
     }
-    return ans;
+	return a1;    
+}
+```
+
+#### 5-5 BSGS算法
+
+BSGS(baby step & giant step): 求解$a^x\equiv b\mod p$时，取一个整数$t$将方程转化为$a^{At-B}\equiv b\mod p$，则原方程变为$a^{At}\equiv a^Bb\mod p$。暴力枚举列出全部$a^x$，而BSGS仅列出$a^{At}$和$a^Bp$。取$t=\lceil \sqrt{p} \rceil$，$a^Bb$可能取值为$b,ab,a^2b,\cdots,a^{t-1}b (\mod p)$, $a^{At}$可能取值为$a^{t},a^{2t},a^{3t},\cdots,a^{t^2}$。A从小取，B从大取，可得到最小的$x=At-B$
+
+```c++
+#define ll long long
+ll t, a, b, p, at; // at is a^t
+map<ll, ll> saveB;  // save (a^Bb, B)
+
+void listB(){
+    ll tmp = b;
+    at = 1;
+    for(int i = 0 ;i < t ;++i){
+        saveb[tmp] = i;
+        tmp = tmp * a % p;
+        at = at * a % p;
+    }
+}
+
+ll bsgs(){
+    t = ceil(sqrt((double)p));
+    listB();
+    ll tmp = at;
+    for(int i = 1 ;i <= t ;++i){
+        auto it = saveB.find(tmp);
+        if(it != saveB.end())
+            return i * t - it->second; // minimal x
+        tmp = tmp * at % p;
+    }
+    return -1;  // no solution
 }
 ```
 
@@ -707,19 +719,18 @@ void cal_comb(){
         for(int j = 1 ;j < i ;++j)
             C[i][j] = C[i-1][j-1] + C[i-1][j];
 }
-
 ```
 
 如果组合数的结果对一个数$q$取模，且模数比$n,m$大，可用乘法逆元计算：$\binom{n}{m}=\frac{n\cdot (n-1)\cdots(n-m+1)}{1\cdot 2\cdots m}$
 
 ```c++
 void choose(ll n, ll m, ll q){
-    ll ret = 1, tmp = 1;
+    ll ret = 1;
     m = min(m, n - m);  // accelerate
     for(int i = 1 ;i <= m ;++i) // divided by (1x2x...x m)
-        tmp = qmult(tmp, i, q);
-    ret = inverse(tmp, q);
-    for(int i = 0 ;i <= (long long)(m - 1) ;++i)
+        ret = qmult(ret, i, q);
+    ret = inv(ret, q);
+    for(int i = 0 ;i <= m - 1 ;++i)
         ret = qmult(n - i, ret, q);
     return ret;
 }
@@ -813,7 +824,7 @@ int id[MAXN+MAXM] = {};
 double v[MAXN] = {};
 double a[MAXM][MAXN] = {};
 
-int sgn(double x) {   // get sign of double
+inline int sgn(double x) {   // get sign of double
   if (x < -EPS) return -1;
   return x > EPS ? 1 : 0;
 }
@@ -942,5 +953,23 @@ void kmp(){
     }
 }
 
+```
+
+### 6 排序算法
+
+#### 6-1 Quick-Sort
+
+```c++
+void qsort(int obj[], int l, int r){
+    if(l >= r) return;
+    swap(obj[r], obj[rand() % (r-l+1) + l]);
+    int i = l - 1;
+    for(int j = l ;j < r ;++j)
+        if(obj[l] <= obj[r])
+            swap(obj[++i], obj[j]);
+    swap(obj[i+1], obj[r]);
+    qsort(obj, l, i);
+    qsort(obj, i+2, r);
+}
 ```
 
