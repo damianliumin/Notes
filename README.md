@@ -1,2 +1,1 @@
-# Notes
-Notes in term 20-21.spr are updated regularly.
+Min Liu updates some of his notes here.
